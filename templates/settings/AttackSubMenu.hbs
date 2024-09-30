@@ -1,0 +1,24 @@
+<form autocomplete="off">
+    <h2>Attack Automation Settings</h2>
+    <div class="form-group">
+        <label>{{untargetBeforeAttackName}}</label>
+        <input type="checkbox" name="untargetBeforeAttack" {{#if untargetBeforeAttack}}checked{{/if}} />
+    </div>
+    <p class="notes">{{untargetBeforeAttackHint}}</p>
+    <div class="form-group">
+        <label>{{untargetAfterAttackName}}</label>
+        <input type="checkbox" name="untargetAfterAttack" {{#if untargetAfterAttack}}checked{{/if}} />
+    </div>
+    <p class="notes">{{untargetAfterAttackHint}}</p>
+    <div class="form-group">
+        <label>{{removeTemplatesAfterAttackName}}</label>
+        <input type="checkbox" name="removeTemplatesAfterAttack" {{#if removeTemplatesAfterAttack}}checked{{/if}} />
+    </div>
+    <p class="notes">{{removeTemplatesAfterAttackHint}}</p>
+    <br/>
+    <footer class="sheet-footer flexrow">
+        <button type="submit" name="submit">
+            <i class="fas fa-save"></i> Save changes
+        </button>
+    </footer>
+</form>

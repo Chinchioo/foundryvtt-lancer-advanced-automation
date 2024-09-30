@@ -1,0 +1,57 @@
+<form autocomplete="off">
+    <h2>{{stormbringerSettingsTitle}}</h2>
+    <br/>
+    <h3>Seismic Deluge</h3>
+    <div class="form-group">
+        <label>{{stormbringerSeismicDelugeAutomationName}}</label>
+        <input type="checkbox" name="stormbringerSeismicDelugeAutomation" {{#if stormbringerSeismicDelugeAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{stormbringerSeismicDelugeAutomationHint}}</p>
+    <div class="form-group">
+        <label>{{stormbringerSeismicDelugeOnlyCombatName}}</label>
+        <input type="checkbox" name="stormbringerSeismicDelugeOnlyCombat" {{#if stormbringerSeismicDelugeOnlyCombat}}checked{{/if}} />
+    </div>
+    <p class="notes">{{stormbringerSeismicDelugeOnlyCombatHint}}</p>
+    <br/>
+    <h3>Stormbending</h3>
+    <div class="form-group">
+        <label>{{stormbringerStormbendingAutomationName}}</label>
+        <input type="checkbox" name="stormbringerStormbendingAutomation" {{#if stormbringerStormbendingAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{stormbringerStormbendingAutomationHint}}</p>
+    <div class="form-group">
+        <label>{{stormbringerStormbendingOnlyCombatName}}</label>
+        <input type="checkbox" name="stormbringerStormbendingOnlyCombat" {{#if stormbringerStormbendingOnlyCombat}}checked{{/if}} />
+    </div>
+    <p class="notes">{{stormbringerStormbendingOnlyCombatHint}}</p>
+    <br/>
+    <h3>Torrent</h3>
+    <div class="form-group">
+        <label>{{stormbringerTorrentAutomateTorrentDieName}}</label>
+        <input type="checkbox" name="stormbringerTorrentAutomateTorrentDie" {{#if stormbringerTorrentAutomateTorrentDie}}checked{{/if}} />
+    </div>
+    <p class="notes">{{stormbringerTorrentAutomateTorrentDieHint}}</p>
+    <div class="form-group">
+        <label>{{stormbringerTorrentCheckTorrentDieName}}</label>
+        <input type="checkbox" name="stormbringerTorrentCheckTorrentDie" {{#if stormbringerTorrentCheckTorrentDie}}checked{{/if}} />
+    </div>
+    <p class="notes">{{stormbringerTorrentCheckTorrentDieHint}}</p>
+    <br/>
+    <h3>Torrent MKII</h3>
+    <div class="form-group">
+        <label>{{stormbringerTorrentMkiiAutomationName}}</label>
+        <input type="checkbox" name="stormbringerTorrentMkiiAutomation" {{#if stormbringerTorrentMkiiAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{stormbringerTorrentMkiiAutomationHint}}</p>
+    <div class="form-group">
+        <label>{{stormbringerTorrentMkiiOnlyCombatName}}</label>
+        <input type="checkbox" name="stormbringerTorrentMkiiOnlyCombat" {{#if stormbringerTorrentMkiiOnlyCombat}}checked{{/if}} />
+    </div>
+    <p class="notes">{{stormbringerTorrentMkiiOnlyCombatHint}}</p>
+    <br/>
+    <footer class="sheet-footer flexrow">
+        <button type="submit" name="submit">
+            <i class="fas fa-save"></i> Save changes
+        </button>
+    </footer>
+</form>

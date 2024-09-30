@@ -1,0 +1,21 @@
+<form autocomplete="off">
+    <h2>{{gmsSettingsTitle}}</h2>
+    <br/>
+    <h3>Custom Paint Job</h3>
+    <div class="form-group">
+        <label>{{gmsCustomPaintJobAutomationName}}</label>
+        <input type="checkbox" name="gmsCustomPaintJobAutomation" {{#if gmsCustomPaintJobAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{gmsCustomPaintJobAutomationHint}}</p>
+    <div class="form-group">
+        <label>{{gmsCustomPaintJobStructureAutomationName}}</label>
+        <input type="checkbox" name="gmsCustomPaintJobStructureAutomation" {{#if gmsCustomPaintJobStructureAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{gmsCustomPaintJobStructureAutomationHint}}</p>
+    <br/>    
+    <footer class="sheet-footer flexrow">
+        <button type="submit" name="submit">
+            <i class="fas fa-save"></i> Save changes
+        </button>
+    </footer>
+</form>

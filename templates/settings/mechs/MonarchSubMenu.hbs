@@ -1,0 +1,48 @@
+<form autocomplete="off">
+    <h2>{{monarchSettingsTitle}}</h2>
+    <br/>
+    <h3>Avenger Silos</h3>
+    <div class="form-group">
+        <label>{{monarchAvengerSilosAutomationName}}</label>
+        <input type="checkbox" name="monarchAvengerSilosAutomation" {{#if monarchAvengerSilosAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{monarchAvengerSilosAutomationHint}}</p>
+    <div class="form-group">
+        <label>{{monarchAvengerSilosOnlyCombatName}}</label>
+        <input type="checkbox" name="monarchAvengerSilosOnlyCombat" {{#if monarchAvengerSilosOnlyCombat}}checked{{/if}} />
+    </div>
+    <p class="notes">{{monarchAvengerSilosOnlyCombatHint}}</p>
+    <br/>
+    <h3>Tlaloc</h3>
+    <div class="form-group">
+        <label>{{monarchTlalocAutomationName}}</label>
+        <input type="checkbox" name="monarchTlalocAutomation" {{#if monarchTlalocAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{monarchTlalocAutomationHint}}</p>    
+    <div class="form-group">
+        <label>{{monarchTlalocOnlyCombatName}}</label>
+        <input type="checkbox" name="monarchTlalocOnlyCombat" {{#if monarchTlalocOnlyCombat}}checked{{/if}} />
+    </div>
+    <p class="notes">{{monarchTlalocOnlyCombatHint}}</p>
+    <br/>
+    <h3>Pinaka Missiles</h3>
+    <div class="form-group">
+        <label>{{monarchPinakaMissileDelayedAutomationName}}</label>
+        <input type="checkbox" name="monarchPinakaMissileDelayedAutomation" {{#if monarchPinakaMissileDelayedAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{monarchPinakaMissileDelayedAutomationHint}}</p>
+    <div class="form-group">
+        <label for="monarchPinakaMissileDelayedTemplateImage">{{monarchPinakaMissileDelayedTemplateImageName}}</label>
+        <button class="file-picker" type="button" name="monarchPinakaMissileDelayedTemplateImageFilePicker" title="Browse Files" data-target="monarchPinakaMissileDelayedTemplateImage" data-type="{{monarchPinakaMissileDelayedTemplateImageFilePickerType}}">
+            <i class="fas fa-file-import"></i>
+        </button>
+        <input type="text" id="monarchPinakaMissileDelayedTemplateImage" name="monarchPinakaMissileDelayedTemplateImage" value="{{monarchPinakaMissileDelayedTemplateImage}}" />
+    </div>
+    <p class="notes">{{monarchPinakaMissileDelayedTemplateImageHint}}</p>
+    <br/>
+    <footer class="sheet-footer flexrow">
+        <button type="submit" name="submit">
+            <i class="fas fa-save"></i> Save changes
+        </button>
+    </footer>
+</form>

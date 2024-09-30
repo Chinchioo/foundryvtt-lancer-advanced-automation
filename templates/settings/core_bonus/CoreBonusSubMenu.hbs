@@ -1,0 +1,21 @@
+<form autocomplete="off">
+    <h2>{{coreBonusSettingsTitle}}</h2>
+    <br/>
+    <h3>Overpower Caliber</h3>
+    <div class="form-group">
+        <label>{{coreBonusOverPowerCaliberAutomationName}}</label>
+        <input type="checkbox" name="coreBonusOverPowerCaliberAutomation" {{#if coreBonusOverPowerCaliberAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{coreBonusOverPowerCaliberAutomationHint}}</p>
+    <div class="form-group">
+        <label>{{coreBonusOverPowerCaliberOnlyCombatName}}</label>
+        <input type="checkbox" name="coreBonusOverPowerCaliberOnlyCombat" {{#if coreBonusOverPowerCaliberOnlyCombat}}checked{{/if}} />
+    </div>
+    <p class="notes">{{coreBonusOverPowerCaliberOnlyCombatHint}}</p>
+    <br/>    
+    <footer class="sheet-footer flexrow">
+        <button type="submit" name="submit">
+            <i class="fas fa-save"></i> Save changes
+        </button>
+    </footer>
+</form>

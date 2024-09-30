@@ -1,0 +1,62 @@
+{
+  "id": "lancer-advanced-automation",
+  "title": "Lancer Advanced Automation",
+  "version": "0.0.0",
+  "compatibility": {
+    "minimum": "11",
+    "verified": "11",
+    "maximum": "11"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "lancer",
+        "type": "system",
+        "compatibility": {}
+      }
+    ],
+    "recommends": [
+      {
+        "id": "lancer-weapon-fx",
+        "type": "module",
+        "compatibility": {}
+      }
+    ]
+  },
+  "description": "Some advanced automation stuff I myself wanted to add to the lancer system for foundryvtt. Currently just a personal beta, use at your own risk. Includes some stuff from non-official sources (e.g. MKII).",
+  "authors": [
+    {
+      "name": "Chinchioo",
+      "discord": "Chinchioo",
+      "flags": {}
+    }
+  ],
+  "url": "https://github.com/Chinchioo/foundryvtt-lancer-advanced-automation",
+  "esmodules": [
+    "scripts/advancedAutomation.js"
+  ],
+  "packs": [
+    {
+      "name": "laa-macros",
+      "label": "Lancer Advance Automation Macros",
+      "path": "packs/laa-macros",
+      "type": "Macro",
+      "system": "lancer",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "laa-items",
+      "label": "Lancer Advance Automation Items",
+      "path": "packs/laa-items",
+      "type": "Item",
+      "system": "lancer",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    }
+  ]
+}
