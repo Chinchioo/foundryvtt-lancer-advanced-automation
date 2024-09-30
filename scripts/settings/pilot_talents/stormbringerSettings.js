@@ -28,9 +28,9 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
-    //Seismic Deluge
+    //Stormbending
     game.settings.register(moduleID, Settings.stormbringerStormbendingAutomation, {
         name: "Automate Stormbending",
         hint: "Prompts to use Stormbending after an attack if conditions are met, managing the 1/round limit and torrent die counter reducing. Only posts the Stormbending chat message!",
@@ -45,9 +45,25 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     //Torrent
+    game.settings.register(moduleID, Settings.stormbringerTorrentMassiveAttackAutomation, {
+        name: "Automate Massive Attack",
+        hint: "Automates the Massive Attack when activating the action. If disabled, use the provided macro to fire manually.",
+        scope: "client",
+        config: false,
+        type: Boolean,
+        default: true,
+    });
+    game.settings.register(moduleID, Settings.stormbringerTorrentMassiveAttackOnlyCombat, {
+        name: "Automate Massive Attack only during combat",
+        hint: "If Massive Attack automation is active, it will only function during active combat.",
+        scope: "client",
+        config: false,
+        type: Boolean,
+        default: false,
+    });
     game.settings.register(moduleID, Settings.stormbringerTorrentAutomateTorrentDie, {
         name: "Automate Torrent Die",
         hint: "Automatically reduces the die with Stormbending usage (if Stormbending automation is active) and resets the die after a massive attack.",
@@ -79,8 +95,8 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
-    });    
+        default: false,
+    });
 }
 
 class StormbringerSubMenu extends FormApplication {
@@ -119,6 +135,14 @@ class StormbringerSubMenu extends FormApplication {
             stormbringerStormbendingOnlyCombat: game.settings.get(moduleID, Settings.stormbringerStormbendingOnlyCombat),
 
             //Torrent
+            stormbringerTorrentMassiveAttackAutomationName: game.settings.settings.get(moduleID + "." + Settings.stormbringerTorrentMassiveAttackAutomation).name,
+            stormbringerTorrentMassiveAttackAutomationHint: game.settings.settings.get(moduleID + "." + Settings.stormbringerTorrentMassiveAttackAutomation).hint,
+            stormbringerTorrentMassiveAttackAutomation: game.settings.get(moduleID, Settings.stormbringerTorrentMassiveAttackAutomation),
+
+            stormbringerTorrentMassiveAttackOnlyCombatName: game.settings.settings.get(moduleID + "." + Settings.stormbringerTorrentMassiveAttackOnlyCombat).name,
+            stormbringerTorrentMassiveAttackOnlyCombatHint: game.settings.settings.get(moduleID + "." + Settings.stormbringerTorrentMassiveAttackOnlyCombat).hint,
+            stormbringerTorrentMassiveAttackOnlyCombat: game.settings.get(moduleID, Settings.stormbringerTorrentMassiveAttackOnlyCombat),
+
             stormbringerTorrentAutomateTorrentDieName: game.settings.settings.get(moduleID + "." + Settings.stormbringerTorrentAutomateTorrentDie).name,
             stormbringerTorrentAutomateTorrentDieHint: game.settings.settings.get(moduleID + "." + Settings.stormbringerTorrentAutomateTorrentDie).hint,
             stormbringerTorrentAutomateTorrentDie: game.settings.get(moduleID, Settings.stormbringerTorrentAutomateTorrentDie),
@@ -148,6 +172,8 @@ class StormbringerSubMenu extends FormApplication {
         game.settings.set(moduleID, Settings.stormbringerStormbendingOnlyCombat, formData.stormbringerStormbendingOnlyCombat);
 
         //Torrent
+        game.settings.set(moduleID, Settings.stormbringerTorrentMassiveAttackAutomation, formData.stormbringerTorrentMassiveAttackAutomation);
+        game.settings.set(moduleID, Settings.stormbringerTorrentMassiveAttackOnlyCombat, formData.stormbringerTorrentMassiveAttackOnlyCombat);
         game.settings.set(moduleID, Settings.stormbringerTorrentAutomateTorrentDie, formData.stormbringerTorrentAutomateTorrentDie);
         game.settings.set(moduleID, Settings.stormbringerTorrentCheckTorrentDie, formData.stormbringerTorrentCheckTorrentDie);
 

@@ -27,8 +27,8 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
-    });    
+        default: false,
+    });
 }
 
 class CoreBonusSubMenu extends FormApplication {

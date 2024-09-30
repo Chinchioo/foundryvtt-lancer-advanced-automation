@@ -27,6 +27,16 @@
     <br/>
     <h3>Torrent</h3>
     <div class="form-group">
+        <label>{{stormbringerTorrentMassiveAttackAutomationName}}</label>
+        <input type="checkbox" name="stormbringerTorrentMassiveAttackAutomation" {{#if stormbringerTorrentMassiveAttackAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{stormbringerTorrentMassiveAttackAutomationHint}}</p>
+    <div class="form-group">
+        <label>{{stormbringerTorrentMassiveAttackOnlyCombatName}}</label>
+        <input type="checkbox" name="stormbringerTorrentMassiveAttackOnlyCombat" {{#if stormbringerTorrentMassiveAttackOnlyCombat}}checked{{/if}} />
+    </div>
+    <p class="notes">{{stormbringerTorrentMassiveAttackOnlyCombatHint}}</p>
+    <div class="form-group">
         <label>{{stormbringerTorrentAutomateTorrentDieName}}</label>
         <input type="checkbox" name="stormbringerTorrentAutomateTorrentDie" {{#if stormbringerTorrentAutomateTorrentDie}}checked{{/if}} />
     </div>

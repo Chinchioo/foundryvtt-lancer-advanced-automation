@@ -103,7 +103,7 @@ export const Flags = {
     attackFlowDamageTypes:  "attackFlow.damageTypes",
 
     //Delayed attacks
-    delayedAttacks: "delayedAttacks",
+    delayedAttacks:         "delayedAttacks",
 
     //Core Bonus
     coreBonus:                      "coreBonus",
@@ -119,9 +119,9 @@ export const Flags = {
     monarchAvengerSilosUsed:    "monarch.avengerSilos.used",
     monarchAvengerSilosRound:   "monarch.avengerSilos.round",
     //Tlaloc
-    tlalocClassNhp:         "tlaloc",
-    tlalocClassNhpActive:   "tlaloc.active",
-    tlalocClassNhpRound:    "tlaloc.round",    
+    tlalocClassNhp:             "tlaloc",
+    tlalocClassNhpActive:       "tlaloc.active",
+    tlalocClassNhpRound:        "tlaloc.round",    
 
     //Stormbringer
     stormbringer:                   "stormbringer",
@@ -161,6 +161,9 @@ export const Settings = {
     //Avenger Silos
     monarchAvengerSilosAutomation: "monarchAvengerSilosAutomation",
     monarchAvengerSilosOnlyCombat: "monarchAvengerSilosOnlyCombat",
+    //Divine Punishment
+    monarchDivinePunishmentAutomation: "monarchDivinePunishmentAutomation",
+    monarchDivinePunishmentOnlyCombat: "monarchDivinePunishmentOnlyCombat",
     //Tlaloc
     monarchTlalocAutomation: "monarchTlalocAutomation",
     monarchTlalocOnlyCombat: "monarchTlalocOnlyCombat",
@@ -169,19 +172,21 @@ export const Settings = {
     monarchPinakaMissileDelayedTemplateImage:   "monarchPinakaMissileDelayedTemplateImage",
     
     //Stormbringer Pilot Talent settings
-    stormbringerMenu: "stormbringerMenu",
-    //Seismic Deluge
-    stormbringerSeismicDelugeAutomation: "stormbringerSeismicDelugeAutomation",
-    stormbringerSeismicDelugeOnlyCombat: "stormbringerSeismicDelugeOnlyCombat",
-    //Stormbending
-    stormbringerStormbendingAutomation: "stormbringerStormbendingAutomation",
-    stormbringerStormbendingOnlyCombat: "stormbringerStormbendingOnlyCombat",
+    stormbringerMenu:                           "stormbringerMenu",
+    //Seismic Deluge    
+    stormbringerSeismicDelugeAutomation:        "stormbringerSeismicDelugeAutomation",
+    stormbringerSeismicDelugeOnlyCombat:        "stormbringerSeismicDelugeOnlyCombat",
+    //Stormbending  
+    stormbringerStormbendingAutomation:         "stormbringerStormbendingAutomation",
+    stormbringerStormbendingOnlyCombat:         "stormbringerStormbendingOnlyCombat",
     //Torrent
-    stormbringerTorrentAutomateTorrentDie: "stormbringerTorrentAutomateTorrentDie",
-    stormbringerTorrentCheckTorrentDie: "stormbringerTorrentCheckTorrentDie",
-    //Torrent MKII
-    stormbringerTorrentMkiiAutomation: "stormbringerTorrentMkiiAutomation",
-    stormbringerTorrentMkiiOnlyCombat: "stormbringerTorrentMkiiOnlyCombat",
+    stormbringerTorrentMassiveAttackAutomation: "stormbringerTorrentAutomation",
+    stormbringerTorrentMassiveAttackOnlyCombat: "stormbringerTorrentOnlyCombat",
+    stormbringerTorrentAutomateTorrentDie:      "stormbringerTorrentAutomateTorrentDie",
+    stormbringerTorrentCheckTorrentDie:         "stormbringerTorrentCheckTorrentDie",
+    //Torrent MKII  
+    stormbringerTorrentMkiiAutomation:          "stormbringerTorrentMkiiAutomation",
+    stormbringerTorrentMkiiOnlyCombat:          "stormbringerTorrentMkiiOnlyCombat",
 }
 
 export const Conditions = {

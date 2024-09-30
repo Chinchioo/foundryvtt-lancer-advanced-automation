@@ -16,7 +16,7 @@ export function registerSettings() {
     //Avenger silos
     game.settings.register(moduleID, Settings.monarchAvengerSilosAutomation, {
         name: "Automate Avenger Silos",
-        hint: "Prompts to use Avenger Silos after an attack if conditions are met, managing the 1/round limit. If disabled, use the provided macro to fire anytime.",
+        hint: "Prompts to use Avenger Silos after an attack if conditions are met, managing the 1/round limit. If disabled, use the provided macro to fire manually.",
         scope: "client",
         config: false,
         type: Boolean,
@@ -28,7 +28,24 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
+        default: false,
+    });
+    //Divine Punishment
+    game.settings.register(moduleID, Settings.monarchDivinePunishmentAutomation, {
+        name: "Automate Divine Punishment",
+        hint: "Automates the Divine Punishment attack when activating the core power. If disabled, use the provided macro to fire manually.",
+        scope: "client",
+        config: false,
+        type: Boolean,
         default: true,
+    });
+    game.settings.register(moduleID, Settings.monarchDivinePunishmentOnlyCombat, {
+        name: "Automate Divine Punishment only during combat",
+        hint: "If Divine Punishment automation is active, it will only function during active combat.",
+        scope: "client",
+        config: false,
+        type: Boolean,
+        default: false,
     });
     //Tlaloc
     game.settings.register(moduleID, Settings.monarchTlalocAutomation, {
@@ -45,7 +62,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     //Pinaka Missile
     game.settings.register(moduleID, Settings.monarchPinakaMissileDelayedAutomation, {
@@ -93,6 +110,14 @@ class MonarchSubMenu extends FormApplication {
             monarchAvengerSilosOnlyCombatHint: game.settings.settings.get(moduleID + "." + Settings.monarchAvengerSilosOnlyCombat).hint,
             monarchAvengerSilosOnlyCombat: game.settings.get(moduleID, Settings.monarchAvengerSilosOnlyCombat),
 
+            //Divine Punishment
+            monarchDivinePunishmentAutomationName: game.settings.settings.get(moduleID + "." + Settings.monarchDivinePunishmentAutomation).name,
+            monarchDivinePunishmentAutomationHint: game.settings.settings.get(moduleID + "." + Settings.monarchDivinePunishmentAutomation).hint,
+            monarchDivinePunishmentAutomation: game.settings.get(moduleID, Settings.monarchDivinePunishmentAutomation),
+
+            monarchDivinePunishmentOnlyCombatName: game.settings.settings.get(moduleID + "." + Settings.monarchDivinePunishmentOnlyCombat).name,
+            monarchDivinePunishmentOnlyCombatHint: game.settings.settings.get(moduleID + "." + Settings.monarchDivinePunishmentOnlyCombat).hint,
+            monarchDivinePunishmentOnlyCombat: game.settings.get(moduleID, Settings.monarchDivinePunishmentOnlyCombat),
 
             //Tlaloc
             monarchTlalocAutomationName: game.settings.settings.get(moduleID + "." + Settings.monarchTlalocAutomation).name,
@@ -102,7 +127,6 @@ class MonarchSubMenu extends FormApplication {
             monarchTlalocOnlyCombatName: game.settings.settings.get(moduleID + "." + Settings.monarchTlalocOnlyCombat).name,
             monarchTlalocOnlyCombatHint: game.settings.settings.get(moduleID + "." + Settings.monarchTlalocOnlyCombat).hint,
             monarchTlalocOnlyCombat: game.settings.get(moduleID, Settings.monarchTlalocOnlyCombat),
-
 
             //Pinaka Missiles
             monarchPinakaMissileDelayedAutomationName: game.settings.settings.get(moduleID + "." + Settings.monarchPinakaMissileDelayedAutomation).name,
@@ -127,6 +151,10 @@ class MonarchSubMenu extends FormApplication {
         //Avenger Silos
         game.settings.set(moduleID, Settings.monarchAvengerSilosAutomation, formData.monarchAvengerSilosAutomation);
         game.settings.set(moduleID, Settings.monarchAvengerSilosOnlyCombat, formData.monarchAvengerSilosDuringCombat);
+
+        //Divine Punishment
+        game.settings.set(moduleID, Settings.monarchDivinePunishmentAutomation, formData.monarchDivinePunishmentAutomation);
+        game.settings.set(moduleID, Settings.monarchDivinePunishmentOnlyCombat, formData.monarchDivinePunishmentOnlyCombat);
 
         //Tlaloc
         game.settings.set(moduleID, Settings.monarchTlalocAutomation, formData.monarchTlalocAutomation);

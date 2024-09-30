@@ -12,14 +12,16 @@ import { init as initAttackFlowAdditions, registerFlowSteps as registerAttackFlo
          onCombatUpdateGM as onAttackFlowCombatUpdateGM, onCombatDeleteGM as onAttackFlowCombatDeleteGM } from "./flowAdditions/attackFlowAdditions/attackFlowAdditions.js";
 import { getAttackTemplates, getDamages, getDamageTypes } from "./flowAdditions/attackFlowAdditions/attackFlowAdditionHelpers.js";
 import { cleanupOverpowerCaliberFlags } from "./flowAdditions/attackFlowAdditions/core_bonus/overpowerCaliber.js";
+import { cleanupAvengerSiloFlags, startAvengerSilos } from "./flowAdditions/attackFlowAdditions/mechs/monarch/avengerSilos.js";
 import { cleanupStormbringerFlags, startTorrentMissile } from "./flowAdditions/attackFlowAdditions/pilot_talents/stormbringer.js";
 //Import Activation flow
 import { init as initActivationFlowAdditions, registerFlowSteps as registerActionvationFlowSteps, 
          onCombatUpdateGM as onActivationFlowCombatUpdateGM, onCombatDeleteGM as onActivationFlowCombatDeleteGM } from "./flowAdditions/activationFlowAdditions/activationFlowAdditions.js";
 import { stopTlalocProtocol } from "./flowAdditions/activationFlowAdditions/mechs/monarch/tlaloc.js";
+import { startTorrentMassiveAttack } from "./flowAdditions/activationFlowAdditions/pilot_talents/stormbringer.js";
 //Import CoreActive flow
 import { init as initCoreActiveFlowAdditions, registerFlowSteps as registerCoreActiveFlowSteps } from "./flowAdditions/coreActivationFlowAdditions/coreActivationFlowAdditions.js";
-import { cleanupAvengerSiloFlags, startAvengerSilos } from "./flowAdditions/attackFlowAdditions/mechs/monarch/avengerSilos.js";
+import { startDivinePunishmentAttack } from "./flowAdditions/coreActivationFlowAdditions/mechs/monarch/divinePunishment.js";
 //Import Structure flow
 import { init as initStructureFlowAdditions, registerFlowSteps as registerStructureFlowSteps } from "./flowAdditions/structureFlowAdditions/structureFlowAdditions.js";
 
@@ -74,8 +76,10 @@ Hooks.once("init", async function () {
         monarch: {
             stopTlalocProtocol,
             startAvengerSilos,
+            startDivinePunishmentAttack,
         },
         stormbringer: {
+            startTorrentMassiveAttack,
             startTorrentMissile,
         },
     };

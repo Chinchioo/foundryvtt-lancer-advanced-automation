@@ -1,5 +1,5 @@
 import { moduleID } from "../../global.js";
-import { cleanupDivinePunishmentActivation, handleDivinePunishmentActivation } from "./mechs/monarch/divinePunishment.js";
+import { handleDivinePunishmentActivation } from "./mechs/monarch/divinePunishment.js";
 
 
 /**
@@ -20,7 +20,7 @@ export function registerFlowSteps(flowSteps, flows) {
     //Insert steps
     //CoreActiveFlow
     //DivinePunishment
-    flows.get("CoreActiveFlow")?.insertStepAfter("initActivationData", moduleID + ".handleDivinePunishmentActivation");
+    flows.get("CoreActiveFlow")?.insertStepAfter("printActionUseCard", moduleID + ".handleDivinePunishmentActivation");
 }
 
 /**
@@ -29,7 +29,6 @@ export function registerFlowSteps(flowSteps, flows) {
  */
 export function init() {    
     Hooks.on("lancer.postFlow.CoreActiveFlow", async (flow, isContinue) => {
-        await cleanupDivinePunishmentActivation(flow.state, flow.options, isContinue);
     });
 }
 
