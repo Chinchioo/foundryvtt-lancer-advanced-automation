@@ -20,7 +20,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.stormbringerSeismicDelugeOnlyCombat, {
         name: "Automate Seismic Deluge only during combat",
@@ -37,7 +37,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.stormbringerStormbendingOnlyCombat, {
         name: "Automate Stormbending only during combat",
@@ -54,7 +54,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.stormbringerTorrentMassiveAttackOnlyCombat, {
         name: "Automate Massive Attack only during combat",
@@ -70,7 +70,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.stormbringerTorrentCheckTorrentDie, {
         name: "Check Torrent Die",
@@ -78,7 +78,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     //Torrent MKII
     game.settings.register(moduleID, Settings.stormbringerTorrentMkiiAutomation, {
@@ -87,7 +87,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.stormbringerTorrentMkiiOnlyCombat, {
         name: "Automate Torrent MKII only during combat",

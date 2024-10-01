@@ -20,7 +20,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.monarchAvengerSilosOnlyCombat, {
         name: "Automate Avenger Silos only during combat",
@@ -37,7 +37,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.monarchDivinePunishmentOnlyCombat, {
         name: "Automate Divine Punishment only during combat",
@@ -54,7 +54,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.monarchTlalocOnlyCombat, {
         name: "Automate Tlaloc only during combat",
@@ -71,7 +71,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.monarchPinakaMissileDelayedTemplateImage, {
         name: "Pinaka Missile template image",

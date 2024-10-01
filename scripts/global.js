@@ -143,6 +143,7 @@ export const Settings = {
     untargetBeforeAttack: "untargetBeforeAttack",
     untargetAfterAttack: "untargetAfterAttack",
     removeTemplatesAfterAttack: "removeTemplatesAfterAttack",
+    disableAttackTemplateUntargeting: "disableAttackTemplateUntargeting",
 
     //Core Bonus settings
     coreBonusMenu: "coreBonusMenu",

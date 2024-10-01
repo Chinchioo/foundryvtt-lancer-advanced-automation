@@ -133,7 +133,7 @@ export async function init() {
     await game.user.setFlag(moduleID, Flags.attackFlowDamages, []);
     
     libWrapper.register(moduleID, 'User.prototype.updateTokenTargets', async (wrapped, ...args) => {
-        if(args.length > 0 && game.user.getFlag(moduleID, Flags.attackFlowRunning)) {
+        if(args.length > 0 && game.user.getFlag(moduleID, Flags.attackFlowRunning) && game.settings.get(moduleID, Settings.disableAttackTemplateUntargeting)) {
             const targets = canvas.tokens?.placeables.filter(token => {
                 for(let targetID of args[0]) {
                     if(targetID === token.id)

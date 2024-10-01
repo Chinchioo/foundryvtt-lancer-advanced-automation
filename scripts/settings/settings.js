@@ -7,7 +7,7 @@ import { registerSettings as registerStormbringerSettings } from "./pilot_talent
 export const subMenuWidth = 600;
 export const licenseMenuIcon = "fas fa-id-card";
 export const talentMenuIcon = "fas fa-award";
-export const coreBonusMenuIcon = "fas fa-cogs";
+export const coreBonusMenuIcon = "fas fa-battery-three-quarters";
 //Just for me!!!!
     //fas fa-user
     //fas fa-id-card
@@ -34,7 +34,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.removeTemplatesAfterAttack, {
         name: "Remove attack templates",
@@ -42,7 +42,15 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
+    });
+    game.settings.register(moduleID, Settings.disableAttackTemplateUntargeting, {
+        name: "Disable untargeting for attack templates",
+        hint: "Prevents templates from untargeting previously selected tokens, allowing placement of multiple attack templates to target all combatants.",
+        scope: "client",
+        config: false,
+        type: Boolean,
+        default: false,
     });
     //Menu
     game.settings.registerMenu(moduleID, Settings.attackMenu, {
@@ -91,6 +99,10 @@ class AttackSubMenu extends FormApplication {
             removeTemplatesAfterAttackName: game.settings.settings.get(moduleID + "." + Settings.removeTemplatesAfterAttack).name,
             removeTemplatesAfterAttackHint: game.settings.settings.get(moduleID + "." + Settings.removeTemplatesAfterAttack).hint,
             removeTemplatesAfterAttack: game.settings.get(moduleID, Settings.removeTemplatesAfterAttack),
+
+            disableAttackTemplateUntargetingName: game.settings.settings.get(moduleID + "." + Settings.disableAttackTemplateUntargeting).name,
+            disableAttackTemplateUntargetingHint: game.settings.settings.get(moduleID + "." + Settings.disableAttackTemplateUntargeting).hint,
+            disableAttackTemplateUntargeting: game.settings.get(moduleID, Settings.disableAttackTemplateUntargeting),
         }
     }
 
@@ -98,5 +110,6 @@ class AttackSubMenu extends FormApplication {
         game.settings.set(moduleID, Settings.untargetBeforeAttack, formData.untargetBeforeAttack);
         game.settings.set(moduleID, Settings.untargetAfterAttack, formData.untargetAfterAttack);
         game.settings.set(moduleID, Settings.removeTemplatesAfterAttack, formData.removeTemplatesAfterAttack);
+        game.settings.set(moduleID, Settings.disableAttackTemplateUntargeting, formData.disableAttackTemplateUntargeting);
     }
 }

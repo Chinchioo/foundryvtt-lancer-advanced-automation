@@ -15,6 +15,12 @@
         <input type="checkbox" name="removeTemplatesAfterAttack" {{#if removeTemplatesAfterAttack}}checked{{/if}} />
     </div>
     <p class="notes">{{removeTemplatesAfterAttackHint}}</p>
+    <p class="notes">{{untargetAfterAttackHint}}</p>
+    <div class="form-group">
+        <label>{{disableAttackTemplateUntargetingName}}</label>
+        <input type="checkbox" name="disableAttackTemplateUntargeting" {{#if disableAttackTemplateUntargeting}}checked{{/if}} />
+    </div>
+    <p class="notes">{{disableAttackTemplateUntargetingHint}}</p>
     <br/>
     <footer class="sheet-footer flexrow">
         <button type="submit" name="submit">

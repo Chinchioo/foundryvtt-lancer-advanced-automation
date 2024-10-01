@@ -19,7 +19,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.coreBonusOverPowerCaliberOnlyCombat, {
         name: "Automate Overpower Caliber only during combat",

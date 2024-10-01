@@ -19,7 +19,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });
     game.settings.register(moduleID, Settings.gmsCustomPaintJobStructureAutomation, {
         name: "Automate Custom Paint Job during structure",
@@ -27,7 +27,7 @@ export function registerSettings() {
         scope: "client",
         config: false,
         type: Boolean,
-        default: true,
+        default: false,
     });    
 }
 
