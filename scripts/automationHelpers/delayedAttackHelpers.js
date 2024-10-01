@@ -341,9 +341,12 @@ async function removeDelayedAttackHookEventData(actor, attackName) {
  * Handles the delayed attacks on combat update.
  * Should be called within the updateCombat hook for hook event data.
  * @param hookEventData: The hook event data for which this event got called.
- * @param actor: The actor for which the flags shall be cleaned up.
+ * @param actor: The actor for which the flags shall be cleaned up. * 
+ * @param currentRound: The current round after the change.
+ * @param currentTurn: The current turn.
+ * @param currentCombatants: The current combatants of this combat.
  */
-export async function onCombatUpdateEventData(hookEventData, actor) {
+export async function onCombatUpdateEventData(hookEventData, actor, currentRound, currentTurn, currentCombatants) {
     if(hookEventData.requestor === hookEventDataRequestor) {
         let isInvalidData = true; //To determine if the hook event data seems to be invalid and should be removed...
         let delayedArray = actor.getFlag(moduleID, Flags.delayedAttacks);
@@ -356,7 +359,7 @@ export async function onCombatUpdateEventData(hookEventData, actor) {
                 if(delayedArray[i].attackName === hookEventData.customData && delayedArray[i].activationTiming !== ActivationTiming.noAutomation) {
                     isInvalidData = false; //Found automated attack for this hook event, so hook event data is valid!
                     //Check if attacks shall already be triggered! Triggerable flag is set by gm events!
-                    if(delayedArray[i].isTriggerable) {
+                    if(delayedArray[i].isTriggerable || (!delayedArray[i].isTriggerable && isTrigger(delayedArray[i], currentRound, currentTurn, currentCombatants))) {
                         delayedArray[i].activationTiming = ActivationTiming.noAutomation
                         triggerAttackIndizes.push(i);
                         triggerAttacks.push(delayedArray[i]);

@@ -112,7 +112,7 @@ Hooks.once("ready", async function () {
         const hookEventDataArr = getHookEventDataArray(Flags.hookEventCombatUpdate);        
         for(const hookEventData of hookEventDataArr) {
             for(const combatant of combat.turns.filter((c) => c.actor.uuid === hookEventData.actorUuid)) {
-                await onDelayedAttackCombatUpdateEventData(hookEventData, combatant.actor);
+                await onDelayedAttackCombatUpdateEventData(hookEventData, combatant.actor, combat.current.round, combat.current.turn, combat.turns);
             }
         }
     });

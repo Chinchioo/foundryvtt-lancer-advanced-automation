@@ -449,12 +449,13 @@ async function customRollDamages(state, options) {
 async function resolveFakeHitRolls(state, option) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
     if (!state.item) return true;
-    if (isRerollAttack(state)) return true;
 
     //Save the damage result data for later usage...    
     state.data.temp = { damage_results: [], crit_damage_results: [], overkill_heat: 0 };
     state.data.temp.damage_results = state.data.damage_results;
     state.data.temp.crit_damage_results = state.data.crit_damage_results;
+
+    if (isRerollAttack(state)) return true;    
     
     //Remove fake hit rolls from "fakeHitRolls" step.
     state.data.hit_results.pop();
