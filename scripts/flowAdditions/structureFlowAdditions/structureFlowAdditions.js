@@ -1,5 +1,5 @@
 import { moduleID } from "../../global.js";
-import { useCustomPaintJobBeforeStructure } from "./mechs/GMS/customPaintJob.js";
+import { useCustomPaintJobBeforeStructure } from "./mechs/gms/customPaintJob.js";
 
 /**
  * ====================================
