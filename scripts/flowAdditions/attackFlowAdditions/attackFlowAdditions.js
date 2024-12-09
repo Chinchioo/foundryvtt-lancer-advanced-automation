@@ -330,7 +330,7 @@ async function targetingHelper(state, options) {
     
     //Hooks for template creation!
     state.data.hooks = { createTemplate: "", deleteTemplate: "" };
-    state.data.hooks.creatTemplate = await Hooks.on("createMeasuredTemplate", 
+    state.data.hooks.createTemplate = await Hooks.on("createMeasuredTemplate", 
     (document, opitons, user) => {
         if(game.user.id === user) {
             state.data.attack_templates.set(document.id, []);
@@ -547,7 +547,7 @@ async function cleanupAdvancedAutomationData(state, options, isContinue) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
     
     if(state.data.hooks?.createTemplate)
-        Hooks.off("createMeasuredTemplate", state.data.hooks.creatTemplate);
+        Hooks.off("createMeasuredTemplate", state.data.hooks.createTemplate);
     if(state.data.hooks?.deleteTemplate)
         Hooks.off("deleteMeasuredTemplate", state.data.hooks.deleteTemplate);
     
