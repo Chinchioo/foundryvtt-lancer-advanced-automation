@@ -44,7 +44,8 @@ export function registerFlowSteps(flowSteps, flows) {
     checkItemLimitedFunction = flowSteps.get("checkItemLimited");
     checkItemChargedFunction = flowSteps.get("checkItemCharged");
     rollAttacksFunction = flowSteps.get("rollAttacks");
-    rollDamagesFunction = flowSteps.get("rollDamages");
+    //Not needed anymore, got moved to new flow (DamageRollFlow)
+    //rollDamagesFunction = flowSteps.get("rollDamages");
     applySelfHeatFunction = flowSteps.get("applySelfHeat");
     updateItemAfterActionFunction = flowSteps.get("updateItemAfterAction");
     flowSteps.set("checkItemDestroyed",                             customCheckItemDestroyed);
@@ -52,7 +53,8 @@ export function registerFlowSteps(flowSteps, flows) {
     flowSteps.set("checkitemLimited",                               customCheckItemLimited);
     flowSteps.set("checkItemCharged",                               customCheckItemCharged);
     flowSteps.set("rollAttacks",                                    customRollAttacks);
-    flowSteps.set("rollDamages",                                    customRollDamages);
+    //Not needed anymore, got moved to new flow (DamageRollFlow)
+    //flowSteps.set("rollDamages",                                    customRollDamages);
     flowSteps.set("applySelfHeat",                                  customApplySelfHeat);
     flowSteps.set("updateItemAfterAction",                          customUpdateItemAfterAction);
 
@@ -61,9 +63,10 @@ export function registerFlowSteps(flowSteps, flows) {
     flowSteps.set(moduleID + ".initCustomAttackData",               initCustomAttackData);
     flowSteps.set(moduleID + ".targetingHelper",                    targetingHelper);
     flowSteps.set(moduleID + ".targetingHelper2",                   targetingHelper2);
-    flowSteps.set(moduleID + ".fakeHitRolls",                       fakeHitRolls);
-    flowSteps.set(moduleID + ".resolveFakeHitRolls",                resolveFakeHitRolls);
-    flowSteps.set(moduleID + ".recalculateOverkillHeat",            recalculateOverkillHeat);
+    //Not needed anymore as damage is rolled within seperate flow now.
+    //flowSteps.set(moduleID + ".fakeHitRolls",                       fakeHitRolls);
+    //flowSteps.set(moduleID + ".resolveFakeHitRolls",                resolveFakeHitRolls);
+    //flowSteps.set(moduleID + ".recalculateOverkillHeat",            recalculateOverkillHeat);
     flowSteps.set(moduleID + ".prepareAnimationMacroData",          prepareAnimationMacroData);
 
     //Overpower Caliber
@@ -94,9 +97,10 @@ export function registerFlowSteps(flowSteps, flows) {
     flows.get("WeaponAttackFlow")?.insertStepAfter ("initAttackData",                   moduleID + ".initCustomAttackData");
     flows.get("WeaponAttackFlow")?.insertStepBefore("showAttackHUD",                    moduleID + ".targetingHelper");
     flows.get("WeaponAttackFlow")?.insertStepAfter ("showAttackHUD",                    moduleID + ".targetingHelper2");
-    flows.get("WeaponAttackFlow")?.insertStepBefore("rollDamages",                      moduleID + ".fakeHitRolls");
-    flows.get("WeaponAttackFlow")?.insertStepAfter ("rollDamages",                      moduleID + ".resolveFakeHitRolls");
-    flows.get("WeaponAttackFlow")?.insertStepAfter (moduleID + ".resolveFakeHitRolls",  moduleID + ".recalculateOverkillHeat");
+    //Not needed anymore as damage is rolled within seperate flow now.
+    //flows.get("WeaponAttackFlow")?.insertStepBefore("rollDamages",                      moduleID + ".fakeHitRolls");
+    //flows.get("WeaponAttackFlow")?.insertStepAfter ("rollDamages",                      moduleID + ".resolveFakeHitRolls");
+    //flows.get("WeaponAttackFlow")?.insertStepAfter (moduleID + ".resolveFakeHitRolls",  moduleID + ".recalculateOverkillHeat");
     flows.get("WeaponAttackFlow")?.insertStepBefore("printAttackCard",                  moduleID + ".prepareAnimationMacroData");
 
     //OverpowerCaliber
@@ -385,6 +389,8 @@ async function customRollAttacks(state, options) {
     }
 }
 
+//Not needed anymore as damage is rolled within seperate flow now.
+/*
 //Do this shit to get damage_results and crit_damage_results as we need them for some automations.....
 async function fakeHitRolls(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
@@ -410,36 +416,6 @@ async function customRollDamages(state, options) {
     }
     if(state.data.laa?.bonus_damage) {
         state.item.system.active_profile.damage = state.item.system.active_profile.damage.concat(state.data.laa.bonus_damage);
-        /*
-        //Do normal attack first!
-        let isContinue = await rollDamagesFunction(state, options);
-        if(isContinue) {
-            //Save results as we need them later again. (Overkill heat not needed, as it will be recalculated later anyway!)
-            const tempDamageResults = state.data.damage_results;
-            const tempCritDamageResults = state.data.crit_damage_results;
-
-            //Next do bonus damage rolls.
-            const tempActiveProfile = state.item.system.active_profile;
-            state.item.system.active_profile.damage = state.data.laa.bonus_damage;
-            isContinue = await rollDamagesFunction(state, options);
-            if(isContinue) {
-                state.item.system.active_profile = tempActiveProfile;
-                
-                //Bonus damage halved if more than 1 target!
-                //Currently cannot find a satisfying solution, they need to do this shit themselves!!!
-                if(state.data.acc_diff.targets.length > 1) {
-                    for(let damage_result of state.data.damage_results) {                        
-                        damage_result.roll.formula = "" + damage_result.roll.formula + " / 2)";
-                    }
-                }
-
-                state.data.damage_results = tempDamageResults.concat(state.data.damage_results);
-                state.data.crit_damage_results = tempCritDamageResults.concat(state.data.crit_damage_results);                                                          
-            }
-        }
-
-        return isContinue;
-        */
     }
     
     return rollDamagesFunction(state, options);
@@ -495,7 +471,8 @@ async function recalculateOverkillHeat(state, option) {
     }
 
     return true;
-}
+}    
+*/
 
 async function customApplySelfHeat(state, options) {
     return applySelfHeatFunction(state, options);
@@ -518,18 +495,11 @@ async function prepareAnimationMacroData(state, options) {
     await game.user.setFlag(moduleID, Flags.attackFlowTemplates, attackTemplates);
 
     //Set damage types and damage flags for usage in other functions (e.g. animation per damage types)
-    let damageResults = [];
-    if(state.data.damage_results.length > 0)
-        damageResults = state.data.damage_results;
-    if(state.data.crit_damage_results.length > 0)
-        damageResults = state.data.crit_damage_results;
-    if(damageResults.length <= 0)
-        damageResults = state.data.temp.crit_damage_results;
     let damages = [];
     let damageTypes = [];
-    for(let damageResult of damageResults) {
-        damages.push(damageResult.roll.total);
-        damageTypes.push(damageResult.d_type);
+    for(let damage of state.item?.currentProfile()?.damage ?? []) {
+        damages.push(damage.val);
+        damageTypes.push(damage.type);
     }
     await game.user.setFlag(moduleID, Flags.attackFlowDamages, damages);
     await game.user.setFlag(moduleID, Flags.attackFlowDamageTypes, damageTypes);
