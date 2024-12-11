@@ -68,6 +68,7 @@ export function registerFlowSteps(flowSteps, flows) {
     //flowSteps.set(moduleID + ".resolveFakeHitRolls",                resolveFakeHitRolls);
     //flowSteps.set(moduleID + ".recalculateOverkillHeat",            recalculateOverkillHeat);
     flowSteps.set(moduleID + ".prepareAnimationMacroData",          prepareAnimationMacroData);
+    flowSteps.set(moduleID + ".manipulateRerollTargeting",          manipulateRerollTargeting);
 
     //Overpower Caliber
     flowSteps.set(moduleID + ".handleOverpowerCaliber",             handleOverpowerCaliber);
@@ -89,9 +90,11 @@ export function registerFlowSteps(flowSteps, flows) {
 
     //Insert steps
     //BasicAttackFlow
+    flows.get("BasicAttackFlow")?.insertStepAfter ("initAttackData",                    moduleID + ".initCustomAttackData");
     flows.get("BasicAttackFlow")?.insertStepBefore("showAttackHUD",                     moduleID + ".targetingHelper");
     flows.get("BasicAttackFlow")?.insertStepAfter ("showAttackHUD",                     moduleID + ".targetingHelper2");
     flows.get("BasicAttackFlow")?.insertStepBefore("printAttackCard",                   moduleID + ".prepareAnimationMacroData");
+    flows.get("BasicAttackFlow")?.insertStepBefore("printAttackCard",                   moduleID + ".manipulateRerollTargeting");
 
     //WeaponAttackFlow
     flows.get("WeaponAttackFlow")?.insertStepAfter ("initAttackData",                   moduleID + ".initCustomAttackData");
@@ -102,6 +105,7 @@ export function registerFlowSteps(flowSteps, flows) {
     //flows.get("WeaponAttackFlow")?.insertStepAfter ("rollDamages",                      moduleID + ".resolveFakeHitRolls");
     //flows.get("WeaponAttackFlow")?.insertStepAfter (moduleID + ".resolveFakeHitRolls",  moduleID + ".recalculateOverkillHeat");
     flows.get("WeaponAttackFlow")?.insertStepBefore("printAttackCard",                  moduleID + ".prepareAnimationMacroData");
+    flows.get("WeaponAttackFlow")?.insertStepBefore("printAttackCard",                  moduleID + ".manipulateRerollTargeting");
 
     //OverpowerCaliber
     flows.get("WeaponAttackFlow")?.insertStepAfter("rollAttacks",                       moduleID + ".handleOverpowerCaliber");
@@ -288,7 +292,9 @@ async function initCustomAttackData(state, options) {
     //Init laa data!
     if(!state.data.laa)
         state.data.laa = {};
-    
+    if(!state.data.laa.temp)
+        state.data.laa.temp = { attack_results: [], hit_results: [], targets: [] }
+
     return true;
 }
 
@@ -475,10 +481,15 @@ async function recalculateOverkillHeat(state, option) {
 */
 
 async function customApplySelfHeat(state, options) {
+    //If reroll, remove self heat, as it should have been applied already and should not be shown on attack card...
+    if(isRerollAttack(state))
+        state.data.self_heat = 0;
+
     return applySelfHeatFunction(state, options);
 }
 
 async function customUpdateItemAfterAction(state, options) {
+    //If reroll, do not update item again, as it has already been updated....
     if(isRerollAttack(state))
         return true;
 
@@ -507,6 +518,27 @@ async function prepareAnimationMacroData(state, options) {
     return true;
 }
 
+/**
+ * Saves hit targets of normal attacks and adds them to later happening rerolls
+ */
+async function manipulateRerollTargeting(state, options) {
+    if (!state.data) throw new TypeError("Attack flow state missing!");
+
+    //Save hit targets for later usage
+    state.data.laa.temp.attack_results = state.data.attack_results;
+    state.data.laa.temp.hit_results = state.data.hit_results;
+    state.data.laa.temp.targets = state.data.acc_diff.targets;
+
+    //Add hit targets from normal attack to reroll attack
+    if(isRerollAttack(state))
+    {
+        state.data.attack_results = state.data.laa.reroll_data.attack_results.concat(state.data.attack_results);
+        state.data.hit_results = state.data.laa.reroll_data.hit_results.concat(state.data.hit_results);
+        state.data.acc_diff.targets = state.data.laa.reroll_data.targets.concat(state.data.acc_diff.targets);
+    }
+    
+    return true;
+}
 
 /**
  * ====================================

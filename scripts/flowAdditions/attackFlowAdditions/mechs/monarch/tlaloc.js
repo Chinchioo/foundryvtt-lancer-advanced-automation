@@ -1,7 +1,7 @@
 import { moduleID, LIDs, Flags } from "../../../../global.js";
 import { getItemFromActorByLID } from "../../../../automationHelpers/tokenOrActorHelpers.js";
 import { beginRerollAttackFlow, beginRerollWeaponAttackFlow, isRerollAttack } from "../../../../automationHelpers/rerollAttackHelpers.js";
-import { simpleYesNoQuestion } from "../../../../automationHelpers/automationHelpers.js";
+import { simpleChatMessage, simpleYesNoQuestion } from "../../../../automationHelpers/automationHelpers.js";
 import { addActionResolver, isSpecialWeaponAttackFlow } from "../../attackFlowAdditionHelpers.js";
 
 /**
@@ -38,18 +38,18 @@ export async function handlePostFlowTlaloc(state, options, isContinue) {
                     if(await simpleYesNoQuestion(tlalocItem.name, "Found some missed attacks!", "Do you want to use " + tlalocItem.name + " to reroll some missed attacks?")) {
                         //Seems to be annoying to post the card!!
                         //game.lancer.beginItemChatFlow(tlalocItem, {"itemId": tlalocItem.id,"uuid": tlalocItem.uuid});
+                        await simpleChatMessage(state.actor, "Rerolls last attack with " + tlalocItem.name);
 
                         //Set flag to keep templates, for easier retargeting...
                         state.data.keepTemplates = true;
 
                         //Check if basic or weapon attack flow
                         if(state.data.type === "attack")
-                            await beginRerollAttackFlow(state.actor, state.data.temp?.damage_results, state.data.temp?.crit_damage_results, state.data.overkill_heat);
+                            await beginRerollAttackFlow(state.actor, state.data.laa.temp.attack_results, state.data.laa.temp.hit_results, state.data.laa.temp.targets);
                         else if(state.data.type === "weapon")
-                            await beginRerollWeaponAttackFlow(state.item, state.data.temp?.damage_results, state.data.temp?.crit_damage_results, state.data.overkill_heat);
+                            await beginRerollWeaponAttackFlow(state.item, state.data.laa.temp.attack_results, state.data.laa.temp.hit_results, state.data.laa.temp.targets);
                     } 
-                }, canUseTlaloc);
-            
+                }, canUseTlaloc);            
         }
     }
 }
