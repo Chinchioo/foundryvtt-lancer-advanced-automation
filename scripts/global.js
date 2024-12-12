@@ -153,9 +153,6 @@ export const Settings = {
 
     //GMS License settings
     gmsMenu: "gmsMenu",
-    //Custom Paint Job
-    gmsCustomPaintJobAutomation: "gmsCustomPaintJobAutomation",
-    gmsCustomPaintJobStructureAutomation: "gmsCustomPaintJobStructureAutomation",
 
     //Monarch License settings
     monarchMenu: "monarchMenu",

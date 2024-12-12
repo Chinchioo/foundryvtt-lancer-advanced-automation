@@ -29,8 +29,9 @@ export async function rollTorrentMissileAttackRolls(state, options) {
             targetedAttackRolls.push({ roll: rollStr, target: target, usedLockOn: null });
             state.data.attack_results.push({ roll: attack_roll, tt: await attack_roll.getTooltip() });
             state.data.hit_results.push({
-                token: { name: target.name, img: target.actor?.img ?? "" },
+                target: target,
                 total: String(attack_roll.total).padStart(2, "0"),
+                usedLockOn: null,
                 hit: hit, 
                 crit: false,
             });
@@ -403,14 +404,14 @@ export async function startTorrentMissile(actor, weaponSize, weaponRange, isCrit
         await item.update({ "system.active_profile": item.system.profiles[weaponSize], "system.selected_profile_index": weaponSize });
 
         const flow = new weaponAttackFlowClass(item);
-        flow.state.data.auto_hit_all = true;
         flow.state.data.is_special_weapon_attack_flow = true;
         flow.state.data.stormbringer_torrent_mk_ii = { is_crit: isCrit };
         console.log("Start torrent missile attack flow");
         await flow.begin();
         console.log("Finished torrent missile attack flow");
 
-        removeItemFromActorByLID(actor, LIDs.stormbringerMkiiTorrent);        
+        //Removing the item stops roll damage functionality from working!!! Keep the item despite the riks of cluttering the item list.
+        //removeItemFromActorByLID(actor, LIDs.stormbringerMkiiTorrent);
     } else {
         ui.notifications.error("Internal issue, couldn't add item '" + LIDs.stormbringerMkiiTorrent + "' from compendium to actor '" + actor.name + "'");
     }

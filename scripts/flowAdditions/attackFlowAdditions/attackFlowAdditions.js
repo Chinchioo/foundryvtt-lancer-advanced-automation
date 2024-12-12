@@ -4,10 +4,8 @@ import { simpleYesNoQuestion } from "../../automationHelpers/automationHelpers.j
 import { removeTemplatesFromScene, targetsFromTemplate } from "../../automationHelpers/templateAndTargetingHelpers.js";
 import { isRerollAttack } from "../../automationHelpers/rerollAttackHelpers.js";
 //Attack flow helpers
-import { hasNormalHit, hasCritHit, calculateOverkillHeat } from "./attackFlowAdditionHelpers.js";
+import { hasNormalHit, hasCritHit, calculateOverkillHeat, isSpecialWeaponAttackFlow } from "./attackFlowAdditionHelpers.js";
 import { cleanupDelayedAttackData, handleDelayedAttacks, initCustomDelayedAttackData } from "../../automationHelpers/delayedAttackHelpers.js";
-//Overpower Caliber
-import { handleOverpowerCaliber, setOverpowerCaliberUsedFlags, onCombatUpdateGM as onOverpowerCaliberCombatUpdateGM, onCombatDeleteGM as onOverpowerCaliberCombatDeleteGM } from "./core_bonus/overpowerCaliber.js"
 //Monarch
 import { handlePostFlowTlaloc } from "./mechs/monarch/tlaloc.js";
 import { cleanupPinakaMissileData, initPinakaMissileAttackData, recalculatePinakaMissileSelfHeat } from "./mechs/monarch/pinakaMissiles.js";
@@ -44,7 +42,8 @@ export function registerFlowSteps(flowSteps, flows) {
     checkItemLimitedFunction = flowSteps.get("checkItemLimited");
     checkItemChargedFunction = flowSteps.get("checkItemCharged");
     rollAttacksFunction = flowSteps.get("rollAttacks");
-    rollDamagesFunction = flowSteps.get("rollDamages");
+    //Not needed anymore, got moved to new flow (DamageRollFlow)
+    //rollDamagesFunction = flowSteps.get("rollDamages");
     applySelfHeatFunction = flowSteps.get("applySelfHeat");
     updateItemAfterActionFunction = flowSteps.get("updateItemAfterAction");
     flowSteps.set("checkItemDestroyed",                             customCheckItemDestroyed);
@@ -52,23 +51,22 @@ export function registerFlowSteps(flowSteps, flows) {
     flowSteps.set("checkitemLimited",                               customCheckItemLimited);
     flowSteps.set("checkItemCharged",                               customCheckItemCharged);
     flowSteps.set("rollAttacks",                                    customRollAttacks);
-    flowSteps.set("rollDamages",                                    customRollDamages);
+    //Not needed anymore, got moved to new flow (DamageRollFlow)
+    //flowSteps.set("rollDamages",                                  customRollDamages);
     flowSteps.set("applySelfHeat",                                  customApplySelfHeat);
     flowSteps.set("updateItemAfterAction",                          customUpdateItemAfterAction);
 
-
+    
     //Handle new steps
     flowSteps.set(moduleID + ".initCustomAttackData",               initCustomAttackData);
     flowSteps.set(moduleID + ".targetingHelper",                    targetingHelper);
     flowSteps.set(moduleID + ".targetingHelper2",                   targetingHelper2);
-    flowSteps.set(moduleID + ".fakeHitRolls",                       fakeHitRolls);
-    flowSteps.set(moduleID + ".resolveFakeHitRolls",                resolveFakeHitRolls);
-    flowSteps.set(moduleID + ".recalculateOverkillHeat",            recalculateOverkillHeat);
+    //Not needed anymore as damage is rolled within seperate flow now.
+    //flowSteps.set(moduleID + ".fakeHitRolls",                       fakeHitRolls);
+    //flowSteps.set(moduleID + ".resolveFakeHitRolls",                resolveFakeHitRolls);
+    //flowSteps.set(moduleID + ".recalculateOverkillHeat",            recalculateOverkillHeat);
     flowSteps.set(moduleID + ".prepareAnimationMacroData",          prepareAnimationMacroData);
-
-    //Overpower Caliber
-    flowSteps.set(moduleID + ".handleOverpowerCaliber",             handleOverpowerCaliber);
-    flowSteps.set(moduleID + ".setOverpowerCaliberUsedFlags",       setOverpowerCaliberUsedFlags);
+    flowSteps.set(moduleID + ".manipulateRerollTargeting",          manipulateRerollTargeting);
 
     //Avenger Silos
     flowSteps.set(moduleID + ".setAvengerSilosUsedFlags",           setAvengerSilosUsedFlags);
@@ -86,22 +84,22 @@ export function registerFlowSteps(flowSteps, flows) {
 
     //Insert steps
     //BasicAttackFlow
+    flows.get("BasicAttackFlow")?.insertStepAfter ("initAttackData",                    moduleID + ".initCustomAttackData");
     flows.get("BasicAttackFlow")?.insertStepBefore("showAttackHUD",                     moduleID + ".targetingHelper");
     flows.get("BasicAttackFlow")?.insertStepAfter ("showAttackHUD",                     moduleID + ".targetingHelper2");
     flows.get("BasicAttackFlow")?.insertStepBefore("printAttackCard",                   moduleID + ".prepareAnimationMacroData");
+    flows.get("BasicAttackFlow")?.insertStepBefore("printAttackCard",                   moduleID + ".manipulateRerollTargeting");
 
     //WeaponAttackFlow
     flows.get("WeaponAttackFlow")?.insertStepAfter ("initAttackData",                   moduleID + ".initCustomAttackData");
     flows.get("WeaponAttackFlow")?.insertStepBefore("showAttackHUD",                    moduleID + ".targetingHelper");
     flows.get("WeaponAttackFlow")?.insertStepAfter ("showAttackHUD",                    moduleID + ".targetingHelper2");
-    flows.get("WeaponAttackFlow")?.insertStepBefore("rollDamages",                      moduleID + ".fakeHitRolls");
-    flows.get("WeaponAttackFlow")?.insertStepAfter ("rollDamages",                      moduleID + ".resolveFakeHitRolls");
-    flows.get("WeaponAttackFlow")?.insertStepAfter (moduleID + ".resolveFakeHitRolls",  moduleID + ".recalculateOverkillHeat");
+    //Not needed anymore as damage is rolled within seperate flow now.
+    //flows.get("WeaponAttackFlow")?.insertStepBefore("rollDamages",                      moduleID + ".fakeHitRolls");
+    //flows.get("WeaponAttackFlow")?.insertStepAfter ("rollDamages",                      moduleID + ".resolveFakeHitRolls");
+    //flows.get("WeaponAttackFlow")?.insertStepAfter (moduleID + ".resolveFakeHitRolls",  moduleID + ".recalculateOverkillHeat");
     flows.get("WeaponAttackFlow")?.insertStepBefore("printAttackCard",                  moduleID + ".prepareAnimationMacroData");
-
-    //OverpowerCaliber
-    flows.get("WeaponAttackFlow")?.insertStepAfter("rollAttacks",                       moduleID + ".handleOverpowerCaliber");
-    flows.get("WeaponAttackFlow")?.insertStepAfter("printAttackCard",                   moduleID + ".setOverpowerCaliberUsedFlags");
+    flows.get("WeaponAttackFlow")?.insertStepBefore("printAttackCard",                  moduleID + ".manipulateRerollTargeting");   
 
     //Avenger Silos
     flows.get("WeaponAttackFlow")?.insertStepAfter("printAttackCard",                   moduleID + ".setAvengerSilosUsedFlags");
@@ -276,7 +274,10 @@ async function untargetTokens() {
  */ 
 async function initCustomAttackData(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
-    if (!state.item) return true;
+
+    //Untarget (Is annoying as fuck!!!)
+    if(game.settings.get(moduleID, Settings.untargetBeforeAttack))
+        await untargetTokens(state, options);
 
     //Store templates!
     state.data.attack_templates = new Map();
@@ -284,7 +285,9 @@ async function initCustomAttackData(state, options) {
     //Init laa data!
     if(!state.data.laa)
         state.data.laa = {};
-    
+    if(!state.data.laa.temp)
+        state.data.laa.temp = { attack_results: [], hit_results: [], targets: [] }
+
     return true;
 }
 
@@ -318,10 +321,6 @@ async function customCheckItemCharged(state, options) {
 
 async function targetingHelper(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");    
-
-    //Untarget (Is annoying as fuck!!!)
-    if(game.settings.get(moduleID, Settings.untargetBeforeAttack))
-        await untargetTokens(state, options);
     
     //Set flag for usage in other functions (e.g. LibWrapper for updateTokenTargets)
     await game.user.setFlag(moduleID, Flags.attackFlowRunning, true);
@@ -363,28 +362,36 @@ async function customRollAttacks(state, options) {
     if(state.data.auto_hit_all) {
         const rollStr = "9000";
         const attack_roll = await new Roll(rollStr).evaluate({ async: true });
+        const attack_roll_tt = await attack_roll.getTooltip();
         let targetedAttackRolls = [];
 
         state.data.hit_results = [];
+        state.data.attack_results = [];
         for(const t of state.data.acc_diff.targets) {
             const target = t.target;
 
-            targetedAttackRolls.push({ roll: rollStr, target: target, usedLockOn: null });
+            targetedAttackRolls.push({ roll: rollStr, target: target, usedLockOn: null });            
+            state.data.attack_results.push({ roll: attack_roll, tt: attack_roll_tt, });
             state.data.hit_results.push({
-                token: { name: target.name, img: target.actor?.img ?? "" },
+                target: target,
                 total: "--",
+                usedLockOn: null,
                 hit: true,
                 crit: false,
            });
         }
-        state.data.attack_results = [{ roll: attack_roll, tt: await attack_roll.getTooltip() }];
         state.data.attack_rolls = { roll: rollStr, targeted: targetedAttackRolls };
+        return true;
+    } else if(isSpecialWeaponAttackFlow(state)) {
+        //Special weapons shall handle their hit rolling and detection either through auto_hit_all or through their own functionality!
         return true;
     } else {
         return rollAttacksFunction(state, options);
     }
 }
 
+//Not needed anymore as damage is rolled within seperate flow now.
+/*
 //Do this shit to get damage_results and crit_damage_results as we need them for some automations.....
 async function fakeHitRolls(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
@@ -410,36 +417,6 @@ async function customRollDamages(state, options) {
     }
     if(state.data.laa?.bonus_damage) {
         state.item.system.active_profile.damage = state.item.system.active_profile.damage.concat(state.data.laa.bonus_damage);
-        /*
-        //Do normal attack first!
-        let isContinue = await rollDamagesFunction(state, options);
-        if(isContinue) {
-            //Save results as we need them later again. (Overkill heat not needed, as it will be recalculated later anyway!)
-            const tempDamageResults = state.data.damage_results;
-            const tempCritDamageResults = state.data.crit_damage_results;
-
-            //Next do bonus damage rolls.
-            const tempActiveProfile = state.item.system.active_profile;
-            state.item.system.active_profile.damage = state.data.laa.bonus_damage;
-            isContinue = await rollDamagesFunction(state, options);
-            if(isContinue) {
-                state.item.system.active_profile = tempActiveProfile;
-                
-                //Bonus damage halved if more than 1 target!
-                //Currently cannot find a satisfying solution, they need to do this shit themselves!!!
-                if(state.data.acc_diff.targets.length > 1) {
-                    for(let damage_result of state.data.damage_results) {                        
-                        damage_result.roll.formula = "" + damage_result.roll.formula + " / 2)";
-                    }
-                }
-
-                state.data.damage_results = tempDamageResults.concat(state.data.damage_results);
-                state.data.crit_damage_results = tempCritDamageResults.concat(state.data.crit_damage_results);                                                          
-            }
-        }
-
-        return isContinue;
-        */
     }
     
     return rollDamagesFunction(state, options);
@@ -495,13 +472,19 @@ async function recalculateOverkillHeat(state, option) {
     }
 
     return true;
-}
+}    
+*/
 
 async function customApplySelfHeat(state, options) {
+    //If reroll, remove self heat, as it should have been applied already and should not be shown on attack card...
+    if(isRerollAttack(state))
+        state.data.self_heat = 0;
+
     return applySelfHeatFunction(state, options);
 }
 
 async function customUpdateItemAfterAction(state, options) {
+    //If reroll, do not update item again, as it has already been updated....
     if(isRerollAttack(state))
         return true;
 
@@ -518,18 +501,11 @@ async function prepareAnimationMacroData(state, options) {
     await game.user.setFlag(moduleID, Flags.attackFlowTemplates, attackTemplates);
 
     //Set damage types and damage flags for usage in other functions (e.g. animation per damage types)
-    let damageResults = [];
-    if(state.data.damage_results.length > 0)
-        damageResults = state.data.damage_results;
-    if(state.data.crit_damage_results.length > 0)
-        damageResults = state.data.crit_damage_results;
-    if(damageResults.length <= 0)
-        damageResults = state.data.temp.crit_damage_results;
     let damages = [];
     let damageTypes = [];
-    for(let damageResult of damageResults) {
-        damages.push(damageResult.roll.total);
-        damageTypes.push(damageResult.d_type);
+    for(let damage of state.item?.currentProfile()?.damage ?? []) {
+        damages.push(damage.val);
+        damageTypes.push(damage.type);
     }
     await game.user.setFlag(moduleID, Flags.attackFlowDamages, damages);
     await game.user.setFlag(moduleID, Flags.attackFlowDamageTypes, damageTypes);
@@ -537,6 +513,27 @@ async function prepareAnimationMacroData(state, options) {
     return true;
 }
 
+/**
+ * Saves hit targets of normal attacks and adds them to later happening rerolls
+ */
+async function manipulateRerollTargeting(state, options) {
+    if (!state.data) throw new TypeError("Attack flow state missing!");
+
+    //Save hit targets for later usage
+    state.data.laa.temp.attack_results = state.data.attack_results;
+    state.data.laa.temp.hit_results = state.data.hit_results;
+    state.data.laa.temp.targets = state.data.acc_diff.targets;
+
+    //Add hit targets from normal attack to reroll attack
+    if(isRerollAttack(state))
+    {
+        state.data.attack_results = state.data.laa.reroll_data.attack_results.concat(state.data.attack_results);
+        state.data.hit_results = state.data.laa.reroll_data.hit_results.concat(state.data.hit_results);
+        state.data.acc_diff.targets = state.data.laa.reroll_data.targets.concat(state.data.acc_diff.targets);
+    }
+    
+    return true;
+}
 
 /**
  * ====================================
@@ -582,7 +579,6 @@ async function removeAttackTemplates(state, options, isContinue) {
  * @param currentRound: The current round after the change.
  */
 export async function onCombatUpdateGM(actor, currentCombatant, currentRound) {
-    await onOverpowerCaliberCombatUpdateGM(actor, currentCombatant, currentRound);
     await onAvengerSilosCombatUpdateGM(actor, currentCombatant, currentRound);
     await onStormbringerCombatUpdateGM(actor, currentCombatant, currentRound);
 }
@@ -593,7 +589,6 @@ export async function onCombatUpdateGM(actor, currentCombatant, currentRound) {
  * @param actor: The actor for the combat deletion handling.
  */
 export async function onCombatDeleteGM(actor) {
-    await onOverpowerCaliberCombatDeleteGM(actor);
     await onAvengerSilosCombatDeleteGM(actor);
     await onStormbringerCombatDeleteGM(actor);
 }

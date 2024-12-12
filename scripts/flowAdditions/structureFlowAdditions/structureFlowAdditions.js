@@ -1,5 +1,4 @@
 import { moduleID } from "../../global.js";
-import { useCustomPaintJobBeforeStructure } from "./mechs/gms/customPaintJob.js";
 
 /**
  * ====================================
@@ -13,13 +12,9 @@ import { useCustomPaintJobBeforeStructure } from "./mechs/gms/customPaintJob.js"
  */
 export function registerFlowSteps(flowSteps, flows) {
     //Handle new steps
-    //Custom Paint Job
-    flowSteps.set(moduleID + ".useCustomPaintJobBeforeStructure",   useCustomPaintJobBeforeStructure);
     
     //Insert steps
     //StructureFlow
-    //Custom Paint Job
-    flows.get("StructureFlow")?.insertStepBefore("preStructureRollChecks",   moduleID + ".useCustomPaintJobBeforeStructure");
 }
 
 /**

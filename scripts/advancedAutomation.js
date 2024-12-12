@@ -11,7 +11,6 @@ import { beginRerollAttackFlow, beginRerollWeaponAttackFlow } from "./automation
 import { init as initAttackFlowAdditions, registerFlowSteps as registerAttackFlowSteps,
          onCombatUpdateGM as onAttackFlowCombatUpdateGM, onCombatDeleteGM as onAttackFlowCombatDeleteGM } from "./flowAdditions/attackFlowAdditions/attackFlowAdditions.js";
 import { getAttackTemplates, getDamages, getDamageTypes } from "./flowAdditions/attackFlowAdditions/attackFlowAdditionHelpers.js";
-import { cleanupOverpowerCaliberFlags } from "./flowAdditions/attackFlowAdditions/core_bonus/overpowerCaliber.js";
 import { cleanupAvengerSiloFlags, startAvengerSilos } from "./flowAdditions/attackFlowAdditions/mechs/monarch/avengerSilos.js";
 import { cleanupStormbringerFlags, startTorrentMissile } from "./flowAdditions/attackFlowAdditions/pilot_talents/stormbringer.js";
 //Import Activation flow
@@ -22,6 +21,10 @@ import { startTorrentMassiveAttack } from "./flowAdditions/activationFlowAdditio
 //Import CoreActive flow
 import { init as initCoreActiveFlowAdditions, registerFlowSteps as registerCoreActiveFlowSteps } from "./flowAdditions/coreActivationFlowAdditions/coreActivationFlowAdditions.js";
 import { startDivinePunishmentAttack } from "./flowAdditions/coreActivationFlowAdditions/mechs/monarch/divinePunishment.js";
+//Import Damage flow
+import { init as initDamageFlowAdditions, registerFlowSteps as registerDamageFlowSteps,
+         onCombatUpdateGM as onDamageFlowCombatUpdateGM, onCombatDeleteGM as onDamageFlowCombatDeleteGM } from "./flowAdditions/damageFlowAdditions/damageFlowAdditions.js";
+import { cleanupOverpowerCaliberFlags } from "./flowAdditions/damageFlowAdditions/core_bonus/overpowerCaliber.js";
 //Import Structure flow
 import { init as initStructureFlowAdditions, registerFlowSteps as registerStructureFlowSteps } from "./flowAdditions/structureFlowAdditions/structureFlowAdditions.js";
 
@@ -40,6 +43,7 @@ Hooks.once("lancer.registerFlows", (flowSteps, flows) => {
     registerAttackFlowSteps(flowSteps, flows);
     registerActionvationFlowSteps(flowSteps, flows);
     registerCoreActiveFlowSteps(flowSteps, flows);
+    registerDamageFlowSteps(flowSteps, flows);
     registerStructureFlowSteps(flowSteps, flows);
 });
 
@@ -91,6 +95,7 @@ Hooks.once("ready", async function () {
     await initAttackFlowAdditions();
     initActivationFlowAdditions();
     initCoreActiveFlowAdditions();
+    initDamageFlowAdditions();
     initStructureFlowAdditions();
 
     Hooks.on("preUpdateCombat", async (combat, combatChanges, options, userId) => {
@@ -107,6 +112,7 @@ Hooks.once("ready", async function () {
             for(const combatant of combat.turns) {
                 await onActivationFlowCombatUpdateGM(combatant.actor, combat.combatant, combat.current.round);
                 await onAttackFlowCombatUpdateGM(combatant.actor, combat.combatant, combat.current.round);
+                await onDamageFlowCombatUpdateGM(combatant.actor, combat.combatant, combat.current.round);
             }
         }
         const hookEventDataArr = getHookEventDataArray(Flags.hookEventCombatUpdate);        
@@ -121,6 +127,7 @@ Hooks.once("ready", async function () {
             for(const combatant of combat.turns) {
                 await onActivationFlowCombatDeleteGM(combatant.actor);
                 await onAttackFlowCombatDeleteGM(combatant.actor);
+                await onDamageFlowCombatDeleteGM(combatant.actor);
                 await onDelayedAttackCombatDeleteGM(combatant.actor);
             }
         }
@@ -130,6 +137,7 @@ Hooks.once("ready", async function () {
         if(game.user.isGM) {
             await onActivationFlowCombatDeleteGM(combatant.actor);
             await onAttackFlowCombatDeleteGM(combatant.actor);
+            await onDamageFlowCombatDeleteGM(combatant.actor);
             await onDelayedAttackCombatDeleteGM(combatant.actor);
         }
     });
@@ -138,6 +146,7 @@ Hooks.once("ready", async function () {
         if(game.user.isGM) {
             await onActivationFlowCombatDeleteGM(combatant.actor);
             await onAttackFlowCombatDeleteGM(combatant.actor);
+            await onDamageFlowCombatDeleteGM(combatant.actor);
             await onDelayedAttackCombatDeleteGM(combatant.actor);
         }
     });
