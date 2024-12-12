@@ -54,25 +54,6 @@ export function hasHit(state) {
 }
 
 /**
- * Calculates the overkill heat based on state damage data and applies it to the flow state data.
- * @param state: The flow state from the active flow.
- */
-export function calculateOverkillHeat(state) {
-    if (state?.data?.overkill) {
-        state.data.overkill_heat = 0;
-        (hasCritHit(state) ? state.data.crit_damage_results : state.data.damage_results).forEach(result => {
-            result.roll.terms.forEach(p => {
-                if (p instanceof DiceTerm) {
-                    p.results.forEach(r => {
-                        if (r.exploded) state.data.overkill_heat += 1;
-                    });
-                }
-            });
-        });
-    }
-}
-
-/**
  * Begins an auto hit all weapon attack flow. (Automatically hits all targets without roll!)
  * @param item: Item to start attack flow for.
  * @param isSpecialWeapon: If the given weapon is a fake weapon e.g. avenger silos.

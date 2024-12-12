@@ -1,5 +1,5 @@
 import { moduleID, weaponAttackFlowClass, WeaponSizes, WeaponTypes, LIDs, Flags, Settings } from "../../../global.js";
-import { addItemOnceToActorByLID, getItemFromActorByLID, removeItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
+import { addItemOnceToActorByLID, getItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
 import { addActionResolver, consumedLockOn, hasHit, isSpecialWeaponAttackFlow } from "../attackFlowAdditionHelpers.js";
 import { isActiveCombat, isAutomationActive } from "../../../automationHelpers/automationHelpers.js";
 
