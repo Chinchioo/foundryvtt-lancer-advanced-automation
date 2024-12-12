@@ -6,8 +6,6 @@ import { isRerollAttack } from "../../automationHelpers/rerollAttackHelpers.js";
 //Attack flow helpers
 import { hasNormalHit, hasCritHit, calculateOverkillHeat, isSpecialWeaponAttackFlow } from "./attackFlowAdditionHelpers.js";
 import { cleanupDelayedAttackData, handleDelayedAttacks, initCustomDelayedAttackData } from "../../automationHelpers/delayedAttackHelpers.js";
-//Overpower Caliber
-import { handleOverpowerCaliber, setOverpowerCaliberUsedFlags, onCombatUpdateGM as onOverpowerCaliberCombatUpdateGM, onCombatDeleteGM as onOverpowerCaliberCombatDeleteGM } from "./core_bonus/overpowerCaliber.js"
 //Monarch
 import { handlePostFlowTlaloc } from "./mechs/monarch/tlaloc.js";
 import { cleanupPinakaMissileData, initPinakaMissileAttackData, recalculatePinakaMissileSelfHeat } from "./mechs/monarch/pinakaMissiles.js";
@@ -58,7 +56,7 @@ export function registerFlowSteps(flowSteps, flows) {
     flowSteps.set("applySelfHeat",                                  customApplySelfHeat);
     flowSteps.set("updateItemAfterAction",                          customUpdateItemAfterAction);
 
-
+    
     //Handle new steps
     flowSteps.set(moduleID + ".initCustomAttackData",               initCustomAttackData);
     flowSteps.set(moduleID + ".targetingHelper",                    targetingHelper);
@@ -69,10 +67,6 @@ export function registerFlowSteps(flowSteps, flows) {
     //flowSteps.set(moduleID + ".recalculateOverkillHeat",            recalculateOverkillHeat);
     flowSteps.set(moduleID + ".prepareAnimationMacroData",          prepareAnimationMacroData);
     flowSteps.set(moduleID + ".manipulateRerollTargeting",          manipulateRerollTargeting);
-
-    //Overpower Caliber
-    flowSteps.set(moduleID + ".handleOverpowerCaliber",             handleOverpowerCaliber);
-    flowSteps.set(moduleID + ".setOverpowerCaliberUsedFlags",       setOverpowerCaliberUsedFlags);
 
     //Avenger Silos
     flowSteps.set(moduleID + ".setAvengerSilosUsedFlags",           setAvengerSilosUsedFlags);
@@ -105,11 +99,7 @@ export function registerFlowSteps(flowSteps, flows) {
     //flows.get("WeaponAttackFlow")?.insertStepAfter ("rollDamages",                      moduleID + ".resolveFakeHitRolls");
     //flows.get("WeaponAttackFlow")?.insertStepAfter (moduleID + ".resolveFakeHitRolls",  moduleID + ".recalculateOverkillHeat");
     flows.get("WeaponAttackFlow")?.insertStepBefore("printAttackCard",                  moduleID + ".prepareAnimationMacroData");
-    flows.get("WeaponAttackFlow")?.insertStepBefore("printAttackCard",                  moduleID + ".manipulateRerollTargeting");
-
-    //OverpowerCaliber
-    flows.get("WeaponAttackFlow")?.insertStepAfter("rollAttacks",                       moduleID + ".handleOverpowerCaliber");
-    flows.get("WeaponAttackFlow")?.insertStepAfter("printAttackCard",                   moduleID + ".setOverpowerCaliberUsedFlags");
+    flows.get("WeaponAttackFlow")?.insertStepBefore("printAttackCard",                  moduleID + ".manipulateRerollTargeting");   
 
     //Avenger Silos
     flows.get("WeaponAttackFlow")?.insertStepAfter("printAttackCard",                   moduleID + ".setAvengerSilosUsedFlags");
@@ -589,7 +579,6 @@ async function removeAttackTemplates(state, options, isContinue) {
  * @param currentRound: The current round after the change.
  */
 export async function onCombatUpdateGM(actor, currentCombatant, currentRound) {
-    await onOverpowerCaliberCombatUpdateGM(actor, currentCombatant, currentRound);
     await onAvengerSilosCombatUpdateGM(actor, currentCombatant, currentRound);
     await onStormbringerCombatUpdateGM(actor, currentCombatant, currentRound);
 }
@@ -600,7 +589,6 @@ export async function onCombatUpdateGM(actor, currentCombatant, currentRound) {
  * @param actor: The actor for the combat deletion handling.
  */
 export async function onCombatDeleteGM(actor) {
-    await onOverpowerCaliberCombatDeleteGM(actor);
     await onAvengerSilosCombatDeleteGM(actor);
     await onStormbringerCombatDeleteGM(actor);
 }

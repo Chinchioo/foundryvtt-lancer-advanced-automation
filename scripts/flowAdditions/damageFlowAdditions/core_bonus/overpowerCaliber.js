@@ -1,8 +1,7 @@
 import { DamageTypes, Flags, LIDs, moduleID, Settings } from "../../../global.js";
 import { isActiveCombat, isAutomationActive, simpleChatMessage, simpleYesNoQuestion } from "../../../automationHelpers/automationHelpers.js";
-import { addBonusDamageToAttack } from "../../../automationHelpers/bonusDamageHelpers.js";
 import { getItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
-import { isSpecialWeaponAttackFlow } from "../attackFlowAdditionHelpers.js";
+import { addBonusDamageToDamageRoll } from "../../../automationHelpers/bonusDamageHelpers.js";
 
 /**
  * ====================================
@@ -16,27 +15,18 @@ export async function handleOverpowerCaliber(state, options) {
     //Is automation active?
     if(isAutomationActive(Settings.coreBonusOverPowerCaliberAutomation, Settings.coreBonusOverPowerCaliberOnlyCombat, state.actor)) {
         //Is valid attack and hasn't been used this round?
-        if(!isSpecialWeaponAttackFlow(state) && !state.actor.getFlag(moduleID, Flags.coreBonusOverpowerCaliberUsed) && state.actor.system.pilot) {
+        if(!state.actor.getFlag(moduleID, Flags.coreBonusOverpowerCaliberUsed) && state.actor.system.pilot) {
             //Check for overpower caliber item.
             const overpowerCaliberItem = getItemFromActorByLID(state.actor.system.pilot.value, LIDs.overpowerCaliber);
             if(overpowerCaliberItem) {
-                //Check if we have a hit and ask if overpower caliber shall be used.
-                let hitAmount = 0;
-                let targetHTML = "";
-                for(const hit_result of state.data.hit_results) {
-                    if(hit_result.hit) {
-                        hitAmount++;
-                        targetHTML = targetHTML + "</br><div><img class='lancer-hit-thumb' src='" + hit_result.token.img + "'/>" + hit_result.token.name + "</div>";
-                    }
-                }
-                if(hitAmount > 0 && await simpleYesNoQuestion("Overpower Caliber", overpowerCaliberItem.name, "Do you want to use overpower caliber? You successfully hit " + hitAmount + " targets:" + targetHTML)) {
+                if(await simpleYesNoQuestion("Overpower Caliber", overpowerCaliberItem.name, "Do you want to use overpower caliber?")) {
                     let damageType = DamageTypes.variable;
                     if(state.item.system.active_profile.damage.length > 0) {
                         damageType = state.item.system.active_profile.damage[0].type;
                     }
                     
-                    await simpleChatMessage(state.actor, state.actor.name + " uses overpower caliber on " + state.item.name);
-                    addBonusDamageToAttack(state, damageType, state.data.acc_diff.targets.length > 1 ? "1d3" : "1d6"); //Half damage if more than 1 target!
+                    await simpleChatMessage(state.actor, "Uses overpower caliber on " + state.item.name);
+                    addBonusDamageToDamageRoll(state, damageType, "1d6");
                     state.data.is_overpower_caliber_active = true;
                 }
             }
