@@ -12,7 +12,7 @@ export function registerSettings() {
         icon: coreBonusMenuIcon,
         type: CoreBonusSubMenu,
     });    
-    //Custom Paint Job
+    //Overpower Caliber
     game.settings.register(moduleID, Settings.coreBonusOverPowerCaliberAutomation, {
         name: "Automate Overpower Caliber",
         hint: "Prompts to use Overpower Caliber during an attack, managing the 1/round limit.",
