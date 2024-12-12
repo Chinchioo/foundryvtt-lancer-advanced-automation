@@ -1,5 +1,5 @@
 import { LIDs, Settings } from "../../../../global.js";
-import { addItemOnceToActorByLID, getItemFromActorByLID, removeItemFromActorByLID } from "../../../../automationHelpers/tokenOrActorHelpers.js";
+import { addItemOnceToActorByLID, getItemFromActorByLID } from "../../../../automationHelpers/tokenOrActorHelpers.js";
 import { beginAutoHitAllWeaponAttackFlow } from "../../../attackFlowAdditions/attackFlowAdditionHelpers.js";
 import { isAutomationActive } from "../../../../automationHelpers/automationHelpers.js";
 
@@ -36,7 +36,8 @@ async function startDivinePunishmentAttackIntern(actor) {
     const item = await addItemOnceToActorByLID(actor, LIDs.monarchDivinePunishment);
     if(item) {
         await beginAutoHitAllWeaponAttackFlow(item, true);
-        removeItemFromActorByLID(actor, LIDs.monarchDivinePunishment);
+        //Removing the item stops roll damage functionality from working!!! Keep the item despite the riks of cluttering the item list.
+        //removeItemFromActorByLID(actor, LIDs.monarchDivinePunishment);
     } else {
         ui.notifications.error("Internal issue, couldn't add item '" + LIDs.monarchDivinePunishment + "' from compendium to actor '" + actor.name + "'");
     }

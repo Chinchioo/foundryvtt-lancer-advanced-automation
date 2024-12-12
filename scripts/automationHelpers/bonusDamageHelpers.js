@@ -4,12 +4,6 @@
  * @param damageType: The damage type of the bonus damage. 
  * @param damageRoll: The damage roll string.
  */
-export function addBonusDamageToAttack(state, damageType, damageRoll) {
-    if(!state.data.laa?.bonus_damage)
-        state.data.laa.bonus_damage = [];
-    
-    state.data.laa.bonus_damage.push({
-        type: damageType,
-        val: damageRoll,
-    });
+export function addBonusDamageToDamageRoll(state, damageType, damageRoll) {
+    state.data.bonus_damage.push({ type: damageType, val: damageRoll });
 }

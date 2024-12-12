@@ -1,5 +1,5 @@
 import { LIDs, moduleID, Settings } from "../../../global.js";
-import { addItemOnceToActorByLID, getItemFromActorByLID, removeItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
+import { addItemOnceToActorByLID, getItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
 import { beginAutoHitAllWeaponAttackFlow } from "../../attackFlowAdditions/attackFlowAdditionHelpers.js";
 import { isAutomationActive } from "../../../automationHelpers/automationHelpers.js";
 
@@ -46,7 +46,8 @@ async function startTorrentMassiveAttackIntern(mechActor) {
     const item = await addItemOnceToActorByLID(mechActor, LIDs.stormbringerTorrent);
     if(item) {
         await beginAutoHitAllWeaponAttackFlow(item, true);
-        removeItemFromActorByLID(mechActor, LIDs.stormbringerTorrent);
+        //Removing the item stops roll damage functionality from working!!! Keep the item despite the riks of cluttering the item list.
+        //removeItemFromActorByLID(mechActor, LIDs.stormbringerTorrent);
         //Resetting counter is done after attack flow!
     } else {
         ui.notifications.error("Internal issue, couldn't add item '" + LIDs.stormbringerTorrent + "' from compendium to actor '" + mechActor.name + "'");
