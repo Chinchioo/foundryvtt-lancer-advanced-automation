@@ -285,6 +285,10 @@ async function untargetTokens() {
 async function initCustomAttackData(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
 
+    //Untarget (Is annoying as fuck!!!)
+    if(game.settings.get(moduleID, Settings.untargetBeforeAttack))
+        await untargetTokens(state, options);
+
     //Store templates!
     state.data.attack_templates = new Map();
 
@@ -327,10 +331,6 @@ async function customCheckItemCharged(state, options) {
 
 async function targetingHelper(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");    
-
-    //Untarget (Is annoying as fuck!!!)
-    if(game.settings.get(moduleID, Settings.untargetBeforeAttack))
-        await untargetTokens(state, options);
     
     //Set flag for usage in other functions (e.g. LibWrapper for updateTokenTargets)
     await game.user.setFlag(moduleID, Flags.attackFlowRunning, true);
