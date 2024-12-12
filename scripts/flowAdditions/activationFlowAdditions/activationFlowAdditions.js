@@ -1,5 +1,4 @@
 import { moduleID } from "../../global.js";
-import { handleCustomPaintJobActivation } from "./mechs/gms/customPaintJob.js";
 import { cleanupPinakaMissileActivation, handlePinakaMissileActivation, printPinakaMissileActivationChatMessage, updatePinakaMissileItemAfterActivation } from "./mechs/monarch/pinakaMissiles.js";
 import { onCombatUpdateGM as onTlalocCombatUpdateGM, onCombatDeleteGM as onTlalocCombatDeleteGM, handleTlalocActivation, cleanupTlalocActivation } from "./mechs/monarch/tlaloc.js";
 import { handleStormbringerActivation } from "./pilot_talents/stormbringer.js";
@@ -16,8 +15,6 @@ import { handleStormbringerActivation } from "./pilot_talents/stormbringer.js";
  */
 export function registerFlowSteps(flowSteps, flows) {
     //Handle new steps
-    //Custom Paint Job
-    flowSteps.set(moduleID + ".handleCustomPaintJobActivation",             handleCustomPaintJobActivation);
     //Pinaka Missiles
     flowSteps.set(moduleID + ".handlePinakaMissileActivation",              handlePinakaMissileActivation);
     flowSteps.set(moduleID + ".updatePinakaMissileItemAfterActivation",     updatePinakaMissileItemAfterActivation);
@@ -29,8 +26,6 @@ export function registerFlowSteps(flowSteps, flows) {
     
     //Insert steps
     //ActivationFlow
-    //Custom Paint Job
-    flows.get("ActivationFlow")?.insertStepAfter("printActionUseCard",      moduleID + ".handleCustomPaintJobActivation");
     //Pinaka Missiles
     flows.get("ActivationFlow")?.insertStepAfter("checkItemCharged",        moduleID + ".handlePinakaMissileActivation");
     flows.get("ActivationFlow")?.insertStepAfter("updateItemAfterAction",   moduleID + ".updatePinakaMissileItemAfterActivation");
@@ -39,10 +34,6 @@ export function registerFlowSteps(flowSteps, flows) {
     flows.get("ActivationFlow")?.insertStepAfter("checkItemCharged",        moduleID + ".handleTlalocActivation");
     //Stormbringer
     flows.get("ActivationFlow")?.insertStepAfter("checkItemCharged",        moduleID + ".handleStormbringerActivation");
-
-    //SystemFlow
-    //Custom Paint Job
-    flows.get("SystemFlow")?.insertStepAfter("printSystemCard",             moduleID + ".handleCustomPaintJobActivation");
 }
 
 /**
