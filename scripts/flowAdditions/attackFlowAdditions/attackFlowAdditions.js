@@ -284,7 +284,6 @@ async function untargetTokens() {
  */ 
 async function initCustomAttackData(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
-    if (!state.item) return true;
 
     //Store templates!
     state.data.attack_templates = new Map();
