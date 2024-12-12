@@ -50,7 +50,8 @@ async function startAvengerSilosIntern(actor) {
     const item = await addItemOnceToActorByLID(actor, LIDs.monarchAvengerSilos);
     if(item) {
         await beginAutoHitAllWeaponAttackFlow(item, true);
-        removeItemFromActorByLID(actor, LIDs.monarchAvengerSilos);
+        //Removing the item stops roll damage functionality from working!!! Keep the item despite the riks of cluttering the item list.
+        //removeItemFromActorByLID(actor, LIDs.monarchAvengerSilos);
     } else {
         ui.notifications.error("Internal issue, couldn't add item '" + LIDs.monarchAvengerSilos + "' from compendium to actor '" + actor.name + "'");
     }

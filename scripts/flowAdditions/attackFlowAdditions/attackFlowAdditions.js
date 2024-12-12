@@ -4,7 +4,7 @@ import { simpleYesNoQuestion } from "../../automationHelpers/automationHelpers.j
 import { removeTemplatesFromScene, targetsFromTemplate } from "../../automationHelpers/templateAndTargetingHelpers.js";
 import { isRerollAttack } from "../../automationHelpers/rerollAttackHelpers.js";
 //Attack flow helpers
-import { hasNormalHit, hasCritHit, calculateOverkillHeat } from "./attackFlowAdditionHelpers.js";
+import { hasNormalHit, hasCritHit, calculateOverkillHeat, isSpecialWeaponAttackFlow } from "./attackFlowAdditionHelpers.js";
 import { cleanupDelayedAttackData, handleDelayedAttacks, initCustomDelayedAttackData } from "../../automationHelpers/delayedAttackHelpers.js";
 //Overpower Caliber
 import { handleOverpowerCaliber, setOverpowerCaliberUsedFlags, onCombatUpdateGM as onOverpowerCaliberCombatUpdateGM, onCombatDeleteGM as onOverpowerCaliberCombatDeleteGM } from "./core_bonus/overpowerCaliber.js"
@@ -54,7 +54,7 @@ export function registerFlowSteps(flowSteps, flows) {
     flowSteps.set("checkItemCharged",                               customCheckItemCharged);
     flowSteps.set("rollAttacks",                                    customRollAttacks);
     //Not needed anymore, got moved to new flow (DamageRollFlow)
-    //flowSteps.set("rollDamages",                                    customRollDamages);
+    //flowSteps.set("rollDamages",                                  customRollDamages);
     flowSteps.set("applySelfHeat",                                  customApplySelfHeat);
     flowSteps.set("updateItemAfterAction",                          customUpdateItemAfterAction);
 
@@ -372,22 +372,28 @@ async function customRollAttacks(state, options) {
     if(state.data.auto_hit_all) {
         const rollStr = "9000";
         const attack_roll = await new Roll(rollStr).evaluate({ async: true });
+        const attack_roll_tt = await attack_roll.getTooltip();
         let targetedAttackRolls = [];
 
         state.data.hit_results = [];
+        state.data.attack_results = [];
         for(const t of state.data.acc_diff.targets) {
             const target = t.target;
 
-            targetedAttackRolls.push({ roll: rollStr, target: target, usedLockOn: null });
+            targetedAttackRolls.push({ roll: rollStr, target: target, usedLockOn: null });            
+            state.data.attack_results.push({ roll: attack_roll, tt: attack_roll_tt, });
             state.data.hit_results.push({
-                token: { name: target.name, img: target.actor?.img ?? "" },
+                target: target,
                 total: "--",
+                usedLockOn: null,
                 hit: true,
                 crit: false,
            });
         }
-        state.data.attack_results = [{ roll: attack_roll, tt: await attack_roll.getTooltip() }];
         state.data.attack_rolls = { roll: rollStr, targeted: targetedAttackRolls };
+        return true;
+    } else if(isSpecialWeaponAttackFlow(state)) {
+        //Special weapons shall handle their hit rolling and detection either through auto_hit_all or through their own functionality!
         return true;
     } else {
         return rollAttacksFunction(state, options);
