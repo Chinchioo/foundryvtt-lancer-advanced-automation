@@ -11,22 +11,25 @@ import { beginRerollAttackFlow, beginRerollWeaponAttackFlow } from "./automation
 import { init as initAttackFlowAdditions, registerFlowSteps as registerAttackFlowSteps,
          onCombatUpdateGM as onAttackFlowCombatUpdateGM, onCombatDeleteGM as onAttackFlowCombatDeleteGM } from "./flowAdditions/attackFlowAdditions/attackFlowAdditions.js";
 import { getAttackTemplates, getDamages, getDamageTypes } from "./flowAdditions/attackFlowAdditions/attackFlowAdditionHelpers.js";
-import { cleanupAvengerSiloFlags, startAvengerSilos } from "./flowAdditions/attackFlowAdditions/mechs/monarch/avengerSilos.js";
-import { cleanupStormbringerFlags, startTorrentMissile } from "./flowAdditions/attackFlowAdditions/pilot_talents/stormbringer.js";
 //Import Activation flow
 import { init as initActivationFlowAdditions, registerFlowSteps as registerActionvationFlowSteps, 
          onCombatUpdateGM as onActivationFlowCombatUpdateGM, onCombatDeleteGM as onActivationFlowCombatDeleteGM } from "./flowAdditions/activationFlowAdditions/activationFlowAdditions.js";
-import { stopTlalocProtocol } from "./flowAdditions/activationFlowAdditions/mechs/monarch/tlaloc.js";
-import { startTorrentMassiveAttack } from "./flowAdditions/activationFlowAdditions/pilot_talents/stormbringer.js";
 //Import CoreActive flow
 import { init as initCoreActiveFlowAdditions, registerFlowSteps as registerCoreActiveFlowSteps } from "./flowAdditions/coreActivationFlowAdditions/coreActivationFlowAdditions.js";
-import { startDivinePunishmentAttack } from "./flowAdditions/coreActivationFlowAdditions/mechs/monarch/divinePunishment.js";
 //Import Damage flow
 import { init as initDamageFlowAdditions, registerFlowSteps as registerDamageFlowSteps,
          onCombatUpdateGM as onDamageFlowCombatUpdateGM, onCombatDeleteGM as onDamageFlowCombatDeleteGM } from "./flowAdditions/damageFlowAdditions/damageFlowAdditions.js";
-import { cleanupOverpowerCaliberFlags } from "./flowAdditions/damageFlowAdditions/core_bonus/overpowerCaliber.js";
 //Import Structure flow
 import { init as initStructureFlowAdditions, registerFlowSteps as registerStructureFlowSteps } from "./flowAdditions/structureFlowAdditions/structureFlowAdditions.js";
+//Import Licenses
+//Monrach
+import { cleanupAvengerSiloFlags, startAvengerSilos } from "./lancer_rulings/licenses/monarch/avengerSilos.js";
+import { stopTlalocProtocol } from "./lancer_rulings/licenses/monarch/tlaloc.js";
+import { startDivinePunishmentAttack } from "./lancer_rulings/licenses/monarch/divinePunishment.js";
+//Import Talents
+import { cleanupStormbringerFlags, startTorrentMissile, startTorrentMassiveAttack } from "./lancer_rulings/pilot_talents/stormbringer.js";
+//Import Core Boni
+import { cleanupOverpowerCaliberFlags } from "./lancer_rulings/core_boni/overpowerCaliber.js";
 
 
 /**

@@ -1,7 +1,7 @@
-import { moduleID, LIDs, Settings } from "../../../../global.js";
-import { isActiveCombat } from "../../../../automationHelpers/automationHelpers.js";
-import { ActivationTiming, prepareDelayedAttack, removeLastPreparedAttack } from "../../../../automationHelpers/delayedAttackHelpers.js";
-import { createTargetAreas } from "../../../../automationHelpers/templateAndTargetingHelpers.js";
+import { moduleID, LIDs, Settings } from "../../../global.js";
+import { isActiveCombat, getTagData } from "../../../automationHelpers/automationHelpers.js";
+import { ActivationTiming, prepareDelayedAttack, removeLastPreparedAttack } from "../../../automationHelpers/delayedAttackHelpers.js";
+import { createTargetAreas } from "../../../automationHelpers/templateAndTargetingHelpers.js";
 
 const damageTypeHTML = ['<i class="cci cci-explosive i--l" style="color:#fca017"></i>Explosive',
                         '<i class="cci cci-kinetic i--l" style="color:#616161"></i>Kinetic',
@@ -146,7 +146,7 @@ export async function printPinakaMissileActivationChatMessage(state, options) {
 
 /**
  * ====================================
- * Additional post attack flow steps
+ * Additional post activation flow steps
  * ====================================
  */ 
 export async function cleanupPinakaMissileActivation(state, options, isContinue) {
@@ -190,4 +190,59 @@ function checkPinakaUseable(item) {
     }
     
     return true;
+}
+
+
+/**
+ * ====================================
+ * Additional attack flow steps
+ * ====================================
+ */
+export async function initPinakaMissileAttackData(state, options) {
+    if (!state.data) throw new TypeError("Activation flow state missing!");
+    if (!state.item) return true;
+    
+    if(state.item.system.lid === LIDs.pinakaMissile || state.item.system.lid === LIDs.pinakaMissileMkii) {
+        ui.notifications.warn("Currently cannot automate pinaka missile functionality with default pinaka missile item! Please use the one from the advanced automation compendium!");
+    }
+    if(state.item.system.lid === LIDs.pinakaMissileLaa) {
+        if(state.data.delayed_attack) {
+            state.data.pinaka_missile = { old_damage: state.item.system.active_profile.damage[0].val };
+            state.item.system.active_profile.damage[0].val = "3D6";
+        }
+    }
+    if(state.item.system.lid === LIDs.pinakaMissileMkiiLaa) {
+        if(state.data.delayed_attack) {
+            state.data.pinaka_missile_mkii = { old_tags: state.item.system.active_profile.all_tags };
+            state.item.system.active_profile.all_tags.push(await getTagData(LIDs.tags.seeking));
+        }
+    }
+    
+    return true;
+}
+
+export async function recalculatePinakaMissileSelfHeat(state, options) {
+    if (!state.data) throw new TypeError("Activation flow state missing!");
+    if (!state.item) return true;
+    
+    if(state.item.system.lid === LIDs.pinakaMissileLaa || state.item.system.lid === LIDs.pinakaMissileMkiiLaa) {
+        //Remove self heat if delayed attack, as heat is already applied during delayed preparation!
+        if(state.data.delayed_attack)
+            state.data.self_heat = 0;
+    }
+    
+    return true;
+}
+
+export async function cleanupPinakaMissileData(state, options, isContinue) {
+    if (!state.data) throw new TypeError("Attack flow state missing!");
+
+    if(state.item.system.lid === LIDs.pinakaMissileLaa) {
+        if(state.data.pinaka_missile)
+            state.item.system.active_profile.damage[0].val = state.data.pinaka_missile.old_damage;
+    }
+    if(state.item.system.lid === LIDs.pinakaMissileMkiiLaa) {
+        if(state.data.pinaka_missile_mkii)
+            state.item.system.active_profile.all_tags = state.data.pinaka_missile_mkii.old_tags;
+    }
 }

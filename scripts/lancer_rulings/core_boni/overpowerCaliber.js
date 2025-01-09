@@ -1,11 +1,11 @@
-import { DamageTypes, Flags, LIDs, moduleID, Settings } from "../../../global.js";
-import { isActiveCombat, isAutomationActive, simpleChatMessage, simpleYesNoQuestion } from "../../../automationHelpers/automationHelpers.js";
-import { getItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
-import { addBonusDamageToDamageRoll } from "../../../automationHelpers/bonusDamageHelpers.js";
+import { DamageTypes, Flags, LIDs, moduleID, Settings } from "../../global.js";
+import { isActiveCombat, isAutomationActive, simpleChatMessage, simpleYesNoQuestion } from "../../automationHelpers/automationHelpers.js";
+import { getItemFromActorByLID } from "../../automationHelpers/tokenOrActorHelpers.js";
+import { addBonusDamageToDamageRoll } from "../../automationHelpers/bonusDamageHelpers.js";
 
 /**
  * ====================================
- * Additional attack flow steps
+ * Additional damage flow steps
  * ====================================
  */
 export async function handleOverpowerCaliber(state, options) {

@@ -1,7 +1,7 @@
 import { moduleID } from "../../global.js";
-import { cleanupPinakaMissileActivation, handlePinakaMissileActivation, printPinakaMissileActivationChatMessage, updatePinakaMissileItemAfterActivation } from "./mechs/monarch/pinakaMissiles.js";
-import { onCombatUpdateGM as onTlalocCombatUpdateGM, onCombatDeleteGM as onTlalocCombatDeleteGM, handleTlalocActivation, cleanupTlalocActivation } from "./mechs/monarch/tlaloc.js";
-import { handleStormbringerActivation } from "./pilot_talents/stormbringer.js";
+import { cleanupPinakaMissileActivation, handlePinakaMissileActivation, printPinakaMissileActivationChatMessage, updatePinakaMissileItemAfterActivation } from "../../lancer_rulings/licenses/monarch/pinakaMissiles.js";
+import { onCombatUpdateGM as onTlalocCombatUpdateGM, onCombatDeleteGM as onTlalocCombatDeleteGM, handleTlalocActivation, cleanupTlalocActivation } from "../../lancer_rulings/licenses/monarch/tlaloc.js";
+import { handleStormbringerActivation } from "../../lancer_rulings/pilot_talents/stormbringer.js";
 
 /**
  * ====================================

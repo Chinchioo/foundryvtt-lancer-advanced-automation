@@ -7,11 +7,11 @@ import { isRerollAttack } from "../../automationHelpers/rerollAttackHelpers.js";
 import { isSpecialWeaponAttackFlow } from "./attackFlowAdditionHelpers.js";
 import { cleanupDelayedAttackData, handleDelayedAttacks, initCustomDelayedAttackData } from "../../automationHelpers/delayedAttackHelpers.js";
 //Monarch
-import { handlePostFlowTlaloc } from "./mechs/monarch/tlaloc.js";
-import { cleanupPinakaMissileData, initPinakaMissileAttackData, recalculatePinakaMissileSelfHeat } from "./mechs/monarch/pinakaMissiles.js";
-import { handlePostFlowAvengerSilos, onCombatUpdateGM as onAvengerSilosCombatUpdateGM, onCombatDeleteGM as onAvengerSilosCombatDeleteGM, setAvengerSilosUsedFlags } from "./mechs/monarch/avengerSilos.js";
+import { handlePostFlowTlaloc } from "../../lancer_rulings/licenses/monarch/tlaloc.js";
+import { cleanupPinakaMissileData, initPinakaMissileAttackData, recalculatePinakaMissileSelfHeat } from "../../lancer_rulings/licenses/monarch/pinakaMissiles.js";
+import { handlePostFlowAvengerSilos, onCombatUpdateGM as onAvengerSilosCombatUpdateGM, onCombatDeleteGM as onAvengerSilosCombatDeleteGM, setAvengerSilosUsedFlags } from "../../lancer_rulings/licenses/monarch/avengerSilos.js";
 //Stormbringer
-import { handlePostFlowStormbringer, onCombatUpdateGM as onStormbringerCombatUpdateGM, onCombatDeleteGM as onStormbringerCombatDeleteGM, rollTorrentMissileAttackRolls } from "./pilot_talents/stormbringer.js";
+import { handlePostFlowStormbringer, onCombatUpdateGM as onStormbringerCombatUpdateGM, onCombatDeleteGM as onStormbringerCombatDeleteGM, rollTorrentMissileAttackRolls } from "../../lancer_rulings/pilot_talents/stormbringer.js";
 
 let checkItemDestroyedFunction;
 let checkWeaponLoadedFunction;

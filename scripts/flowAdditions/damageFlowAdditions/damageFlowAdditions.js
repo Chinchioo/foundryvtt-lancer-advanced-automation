@@ -1,6 +1,6 @@
 import { moduleID } from "../../global.js";
 //Overpower Caliber
-import { handleOverpowerCaliber, setOverpowerCaliberUsedFlags, onCombatUpdateGM as onOverpowerCaliberCombatUpdateGM, onCombatDeleteGM as onOverpowerCaliberCombatDeleteGM } from "./core_bonus/overpowerCaliber.js"
+import { handleOverpowerCaliber, setOverpowerCaliberUsedFlags, onCombatUpdateGM as onOverpowerCaliberCombatUpdateGM, onCombatDeleteGM as onOverpowerCaliberCombatDeleteGM } from "../../lancer_rulings/core_boni/overpowerCaliber.js"
 
 /**
  * ====================================

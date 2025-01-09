@@ -1,5 +1,5 @@
 import { moduleID } from "../../global.js";
-import { handleDivinePunishmentActivation } from "./mechs/monarch/divinePunishment.js";
+import { handleDivinePunishmentActivation } from "../../lancer_rulings/licenses/monarch/divinePunishment.js";
 
 
 /**
