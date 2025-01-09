@@ -8,6 +8,13 @@ import { isActiveCombat, isAutomationActive, isRangedAttack, simpleYesNoQuestion
  * Additional attack flow steps
  * ====================================
  */
+
+/**
+ * Attack flow step to set some flags that indicate that the avenger silos have been used this round already. Will only be done if this attack flow is for the avenger silo item.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function setAvengerSilosUsedFlags(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
     if (!state.item) return true;
@@ -20,6 +27,12 @@ export async function setAvengerSilosUsedFlags(state, options) {
     return true;
 }
 
+/**
+ * Post attack flow step to handle avenger silo usage. If current attack fulfills all conditions the user is given the opportunity to start an avenger silo attack.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow. 
+ * @param isContinue Used to determine if the current flow has been canceled or not.
+ */
 export async function handlePostFlowAvengerSilos(state, options, isContinue) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
     if (!state.item) return;

@@ -14,6 +14,13 @@ const StormbringerRank = {
  * Additional activation flow steps
  * ====================================
  */
+
+/**
+ * Activation flow step to handle stormbringer massive attack activation.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function handleStormbringerActivation(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
@@ -40,6 +47,13 @@ export async function handleStormbringerActivation(state, options) {
  * ====================================
  * Additional attack flow steps
  * ====================================
+ */
+
+/**
+ * Attack flow step to roll custom torrent missile attack rolls instead of the normal attack roll during an attack with torrent missiles mkii.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
  */
 export async function rollTorrentMissileAttackRolls(state, options) {
     if(state.item.system.lid === LIDs.stormbringerMkiiTorrent) {
@@ -69,6 +83,12 @@ export async function rollTorrentMissileAttackRolls(state, options) {
     return true;
 }
 
+/**
+ * Post attack flow step to handle stormbringer usage based on stormbringer level. Handles all post attack stuff like stormbending activation, torrent die reduction, seismic deluge activation ...
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow. 
+ * @param isContinue Used to determine if the current flow has been canceled or not.
+ */
 export async function handlePostFlowStormbringer(state, options, isContinue) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
     

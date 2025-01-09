@@ -12,6 +12,13 @@ const damageTypeHTML = ['<i class="cci cci-explosive i--l" style="color:#fca017"
  * Additional activation flow steps
  * ====================================
  */
+
+/**
+ * Activation flow step to handle special pinaka missile activations prepare delayed attack and swap modular head.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function handlePinakaMissileActivation(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
@@ -103,6 +110,12 @@ export async function handlePinakaMissileActivation(state, options) {
     return true;
 }
 
+/**
+ * Activation flow step to update pinaka missile item data after a special activation (e.g. changing damage type for swap modular head).
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function updatePinakaMissileItemAfterActivation(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
@@ -119,8 +132,13 @@ export async function updatePinakaMissileItemAfterActivation(state, options) {
     return true;
 }
 
+/**
+ * Activation flow step to print swap modular head activation chat message. Needed to indicate that the special swap modular head activation has been used.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function printPinakaMissileActivationChatMessage(state, options) {
-
     //Pinaka missiles mkii 
     //Swap modular head protocol
     if(state.data.action?.lid === LIDs.pinakaMissileMkiiLaaSwapHead && checkPinakaUseable(state.item) && state.data.pinaka_head_swap?.selectedDamageTypeIndex) {
@@ -149,6 +167,13 @@ export async function printPinakaMissileActivationChatMessage(state, options) {
  * Additional post activation flow steps
  * ====================================
  */ 
+
+/**
+ * Post activation flow step to cleanup any pinaka missile special activation data from flags and items.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow. 
+ * @param isContinue Used to determine if the current flow has been canceled or not.
+ */
 export async function cleanupPinakaMissileActivation(state, options, isContinue) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
@@ -198,6 +223,13 @@ function checkPinakaUseable(item) {
  * Additional attack flow steps
  * ====================================
  */
+
+/**
+ * Attack flow step to initialize some pinaka missile attack data in flow state. Used for pinaka missile delayed attacks which have different damage value or tag data.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function initPinakaMissileAttackData(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
@@ -221,6 +253,12 @@ export async function initPinakaMissileAttackData(state, options) {
     return true;
 }
 
+/**
+ * Attack flow step to recalculate self heat in case of delayed attacks, as the self heat is already applied during delayed attack activation.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function recalculatePinakaMissileSelfHeat(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
@@ -234,6 +272,12 @@ export async function recalculatePinakaMissileSelfHeat(state, options) {
     return true;
 }
 
+/**
+ * Post attack flow step to cleanup custom pinaka missile attack data from flags and items.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow. 
+ * @param isContinue Used to determine if the current flow has been canceled or not.
+ */
 export async function cleanupPinakaMissileData(state, options, isContinue) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
 

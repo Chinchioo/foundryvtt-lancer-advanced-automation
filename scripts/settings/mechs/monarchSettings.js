@@ -1,7 +1,9 @@
 import { moduleID, Settings } from "../../global.js";
 import { subMenuWidth, licenseMenuIcon } from "../settings.js";
 
-//Register settings
+/**
+ * Registers setting entries.
+ */
 export function registerSettings() {
     //Menu
     game.settings.registerMenu(moduleID, Settings.monarchMenu, {
@@ -84,6 +86,9 @@ export function registerSettings() {
     });    
 }
 
+/**
+ * Form application for monarch sub menu within settings.
+ */
 class MonarchSubMenu extends FormApplication {
     constructor() {
         super();

@@ -8,6 +8,13 @@ import { addBonusDamageToDamageRoll } from "../../automationHelpers/bonusDamageH
  * Additional damage flow steps
  * ====================================
  */
+
+/**
+ * Damage flow step to handle overpower caliber usage. Asks the user if overpower caliber shall be used and adds the bonus damage to damage roll.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function handleOverpowerCaliber(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
     if (!state.item) return true;
@@ -36,6 +43,12 @@ export async function handleOverpowerCaliber(state, options) {
     return true;
 }
 
+/**
+ * Damage flow step to set some flags that indicate overpower caliber has been used this round already.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function setOverpowerCaliberUsedFlags(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
 

@@ -17,7 +17,9 @@ export const coreBonusMenuIcon = "fas fa-battery-three-quarters";
     //fas fa-award
     //fas fa-cogs
 
-//Register settings
+/**
+ * Registers setting entries.
+ */
 export function registerSettings() {
     //Attack Settings
     game.settings.register(moduleID, Settings.untargetBeforeAttack, {
@@ -73,6 +75,9 @@ export function registerSettings() {
     registerStormbringerSettings();
 }
 
+/**
+ * Form application for attack sub menu within settings.
+ */
 class AttackSubMenu extends FormApplication {
     constructor() {
         super();

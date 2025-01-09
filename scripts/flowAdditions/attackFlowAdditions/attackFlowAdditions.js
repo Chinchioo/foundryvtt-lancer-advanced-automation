@@ -28,8 +28,10 @@ let updateItemAfterActionFunction;
  */
 
 /**
- * Registers the new flows and flow steps to corresponding flows.
+ * Registers the new flow steps to corresponding flows.
  * Must be called within register flows hook.
+ * @param flowSteps The flow steps container to register the flow steps to.
+ * @param flows The flows container to insert flow steps in order.
  */
 export function registerFlowSteps(flowSteps, flows) {
     //TODO: Change some functionality to use custom flows instead of overwriting attack flows...
@@ -249,6 +251,9 @@ async function actionResolver(state) {
     }
 }
 
+/**
+ * Untargets all currently targeted tokens.
+ */
 async function untargetTokens() {
     //Untarget
     await game.user.updateTokenTargets();
@@ -258,7 +263,14 @@ async function untargetTokens() {
  * ====================================
  * Additional attack flow steps
  * ====================================
- */ 
+ */
+
+/**
+ * Attack flow step to init custom data for this module. Sets some state and flag data.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 async function initCustomAttackData(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
 
@@ -278,6 +290,12 @@ async function initCustomAttackData(state, options) {
     return true;
 }
 
+/**
+ * Attack flow step to overwrite checkItemDestroyed flow step. Used to either completely ignore or add on top of original functionalitiy.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 async function customCheckItemDestroyed(state, options) {
     if(isRerollAttack(state))
         return true;
@@ -285,6 +303,12 @@ async function customCheckItemDestroyed(state, options) {
     return checkItemDestroyedFunction(state, options);
 }
 
+/**
+ * Attack flow step to overwrite checkWeaponLoaded flow step. Used to either completely ignore or add on top of original functionalitiy.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 async function customCheckWeaponLoaded(state, options) {
     if(isRerollAttack(state))
         return true;
@@ -292,6 +316,12 @@ async function customCheckWeaponLoaded(state, options) {
     return checkWeaponLoadedFunction(state, options);
 }
 
+/**
+ * Attack flow step to overwrite checkItemLimited flow step. Used to either completely ignore or add on top of original functionalitiy.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 async function customCheckItemLimited(state, options) {
     if(isRerollAttack(state))
         return true;
@@ -299,6 +329,12 @@ async function customCheckItemLimited(state, options) {
     return checkItemLimitedFunction(state, options);
 }
 
+/**
+ * Attack flow step to overwrite checkItemCharged flow step. Used to either completely ignore or add on top of original functionalitiy.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 async function customCheckItemCharged(state, options) {
     if(isRerollAttack(state))
         return true;
@@ -306,6 +342,12 @@ async function customCheckItemCharged(state, options) {
     return checkItemChargedFunction(state, options);
 }
 
+/**
+ * Attack flow step to handle some special targeting stuff. Sets some necessary flags and saves created templates during attack flow for later usage.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled.  
+ */
 async function targetingHelper(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");    
     
@@ -332,6 +374,12 @@ async function targetingHelper(state, options) {
     return true;
 }
 
+/**
+ * Attack flow step to handle some special targeting stuff. Adds found target tokens inside placed templates to the attack templates flag for later usage.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled.  
+ */
 async function targetingHelper2(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
     
@@ -345,6 +393,12 @@ async function targetingHelper2(state, options) {
     return true;
 }
 
+/**
+ * Attack flow step to overwrite rollAttacks flow step. Used to either completely ignore or add on top of original functionalitiy.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 async function customRollAttacks(state, options) {
     if(state.data.auto_hit_all) {
         const rollStr = "9000";
@@ -377,6 +431,12 @@ async function customRollAttacks(state, options) {
     }
 }
 
+/**
+ * Attack flow step to overwrite applySelfHeat flow step. Used to either completely ignore or add on top of original functionalitiy.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 async function customApplySelfHeat(state, options) {
     //If reroll, remove self heat, as it should have been applied already and should not be shown on attack card...
     if(isRerollAttack(state))
@@ -385,6 +445,12 @@ async function customApplySelfHeat(state, options) {
     return applySelfHeatFunction(state, options);
 }
 
+/**
+ * Attack flow step to overwrite updateItemAfterAction flow step. Used to either completely ignore or add on top of original functionalitiy.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 async function customUpdateItemAfterAction(state, options) {
     //If reroll, do not update item again, as it has already been updated....
     if(isRerollAttack(state))
@@ -393,6 +459,12 @@ async function customUpdateItemAfterAction(state, options) {
     return updateItemAfterActionFunction(state, options);
 }
 
+/**
+ * Attack flow step to prepare some animation data for usage in macros (e.g. Created templates, damage tyypes ...).
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 async function prepareAnimationMacroData(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
 
@@ -416,7 +488,10 @@ async function prepareAnimationMacroData(state, options) {
 }
 
 /**
- * Saves hit targets of normal attacks and adds them to later happening rerolls
+ * Attack flow step to save hit targets of normal attacks and add them to later happening rerolls.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
  */
 async function manipulateRerollTargeting(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
@@ -441,7 +516,14 @@ async function manipulateRerollTargeting(state, options) {
  * ====================================
  * Additional post attack flow steps
  * ====================================
- */ 
+ */
+
+/**
+ * Post attack flow step to cleanup any attack flow addtion data created during attack flows.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow. 
+ * @param isContinue Used to determine if the current flow has been canceled or not.
+ */
 async function cleanupAdvancedAutomationData(state, options, isContinue) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
     
@@ -460,6 +542,12 @@ async function cleanupAdvancedAutomationData(state, options, isContinue) {
     await game.user.setFlag(moduleID, Flags.attackFlowDamages, []);
 }
 
+/**
+ * Post attack flow step to remove attack templates from the scene after attack has resolved.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow. 
+ * @param isContinue Used to determine if the current flow has been canceled or not. 
+ */
 async function removeAttackTemplates(state, options, isContinue) {
     //Remove targeting helper templates from view
     if(!state.data.delayed_attack || isContinue) //Do not remove if delayed attack got canceled!

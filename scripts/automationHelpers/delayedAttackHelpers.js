@@ -242,6 +242,13 @@ function isTrigger(delayedAttackData, currentRound, currentTurn, currentCombatan
  * Additional attack flow steps
  * ====================================
  */
+
+/**
+ * Attack flow step to handle delayed attack activations
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled.
+ */
 export async function handleDelayedAttacks(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
@@ -292,6 +299,12 @@ export async function handleDelayedAttacks(state, options) {
     return true;
 }
 
+/**
+ * Attack flow step to init delayed attack data and write it into the flow state.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled.
+ */
 export async function initCustomDelayedAttackData(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
@@ -311,6 +324,13 @@ export async function initCustomDelayedAttackData(state, options) {
  * Additional post attack flow steps
  * ====================================
  */ 
+
+/**
+ * Post attack flow step to cleanup any delayed attack data from flags.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow. 
+ * @param isContinue Used to determine if the current flow has been canceled or not.
+ */
 export async function cleanupDelayedAttackData(state, options, isContinue) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
 

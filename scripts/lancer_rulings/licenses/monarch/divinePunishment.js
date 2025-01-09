@@ -8,6 +8,13 @@ import { isAutomationActive } from "../../../automationHelpers/automationHelpers
  * Additional activation flow steps
  * ====================================
  */
+
+/**
+ * Activation flow step to handle divine punishment core power activation. Will start an attack flow with the divine punishment item.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function handleDivinePunishmentActivation(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;

@@ -1,7 +1,9 @@
 import { moduleID, Settings } from "../../global.js";
 import { subMenuWidth, talentMenuIcon } from "../settings.js";
 
-//Register settings
+/**
+ * Registers setting entries.
+ */
 export function registerSettings() {
     //Menu
     game.settings.registerMenu(moduleID, Settings.stormbringerMenu, {
@@ -99,6 +101,9 @@ export function registerSettings() {
     });
 }
 
+/**
+ * Form application for stormbringer sub menu within settings.
+ */
 class StormbringerSubMenu extends FormApplication {
     constructor() {
         super();

@@ -1,7 +1,9 @@
 import { moduleID, Settings } from "../../global.js";
 import { subMenuWidth, coreBonusMenuIcon } from "../settings.js";
 
-//Register settings
+/**
+ * Registers setting entries.
+ */
 export function registerSettings() {
     //Menu
     game.settings.registerMenu(moduleID, Settings.coreBonusMenu, {
@@ -31,6 +33,9 @@ export function registerSettings() {
     });
 }
 
+/**
+ * Form application for core bonus sub menu within settings.
+ */
 class CoreBonusSubMenu extends FormApplication {
     constructor() {
         super();

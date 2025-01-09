@@ -9,6 +9,13 @@ import { addActionResolver, isSpecialWeaponAttackFlow } from "../../../flowAddit
  * Additional activation flow steps
  * ====================================
  */
+
+/**
+ * Activation flow step to handle tlaloc system activation. Sets flag to later use during attack flow for automated reroll.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow.
+ * @returns True if the flow shall go on, false if the flow has been canceled. 
+ */
 export async function handleTlalocActivation(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
@@ -37,9 +44,16 @@ export async function handleTlalocActivation(state, options) {
 
 /**
  * ====================================
- * Additional post attack flow steps
+ * Additional post activation flow steps
  * ====================================
  */ 
+
+/**
+ * Post activation flow step to cleanup tlaloc activation data.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow. 
+ * @param isContinue Used to determine if the current flow has been canceled or not.
+ */
 export async function cleanupTlalocActivation(state, options, isContinue) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
@@ -58,6 +72,13 @@ export async function cleanupTlalocActivation(state, options, isContinue) {
  * ====================================
  * Additional attack flow steps
  * ====================================
+ */
+
+/**
+ * Post attack flow step to handle tlaloc rerolls if it has been active for this attack flow and meets tlaloc conditions.
+ * @param state Flow state from the current flow.
+ * @param options Flow options from the current flow. 
+ * @param isContinue Used to determine if the current flow has been canceled or not.
  */
 export async function handlePostFlowTlaloc(state, options, isContinue) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
