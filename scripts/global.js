@@ -47,7 +47,7 @@ export const WeaponTypes = {
 
 export const WeaponRanges = {
     range: "Range",
-    blas: "Blast",
+    blast: "Blast",
 }
 
 export const WeaponSizes = {
@@ -66,6 +66,10 @@ export const LIDs = {
     monarchFrame: "mf_monarch",
     monarchDivinePunishment: "laa_monarch_divine_punishment",
     monarchAvengerSilos: "laa_monarch_avenger_silos",
+    //JavelinRocket
+    javelinRockets: "ms_javelin_rockets",
+    javelinRocketsCustom: "laa_monarch_javelin_rockets_custom",
+    javelinRocketsWeapon: "laa_monarch_javelin_rockets_weapon",
     //Tlaloc
     tlalocClassNhp: "l_tlaloc_class_nhp",
     tlalocClassNhpMkii: "lmkii_tlaloc_class_nhp_mk_two",
@@ -118,6 +122,9 @@ export const Flags = {
     monarchAvengerSilos:        "monarch.avengerSilos",
     monarchAvengerSilosUsed:    "monarch.avengerSilos.used",
     monarchAvengerSilosRound:   "monarch.avengerSilos.round",
+    //Javelin Rockets
+    javelinRockets:             "javelinRockets",
+    javelinRocketsTemplates:    "javelinRockets.Templates",
     //Tlaloc
     tlalocClassNhp:             "tlaloc",
     tlalocClassNhpActive:       "tlaloc.active",
@@ -156,6 +163,9 @@ export const Settings = {
 
     //Monarch License settings
     monarchMenu: "monarchMenu",
+    //Javelin Rockets
+    monarchJavelinRocketsAutomation:    "monarchJavelinRocketsAutomation",
+    monarchJavelinRocketsTemplateImage: "monarchJavelinRocketsTemplateImage",
     //Avenger Silos
     monarchAvengerSilosAutomation: "monarchAvengerSilosAutomation",
     monarchAvengerSilosOnlyCombat: "monarchAvengerSilosOnlyCombat",

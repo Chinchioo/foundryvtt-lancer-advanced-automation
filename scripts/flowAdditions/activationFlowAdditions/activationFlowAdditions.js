@@ -1,4 +1,5 @@
 import { moduleID } from "../../global.js";
+import { handleJavelinRocketsActivation } from "../../lancer_rulings/licenses/monarch/javelinRockets.js";
 import { cleanupPinakaMissileActivation, handlePinakaMissileActivation, printPinakaMissileActivationChatMessage, updatePinakaMissileItemAfterActivation } from "../../lancer_rulings/licenses/monarch/pinakaMissiles.js";
 import { onCombatUpdateGM as onTlalocCombatUpdateGM, onCombatDeleteGM as onTlalocCombatDeleteGM, handleTlalocActivation, cleanupTlalocActivation } from "../../lancer_rulings/licenses/monarch/tlaloc.js";
 import { handleStormbringerActivation } from "../../lancer_rulings/pilot_talents/stormbringer.js";
@@ -17,6 +18,8 @@ import { handleStormbringerActivation } from "../../lancer_rulings/pilot_talents
  */
 export function registerFlowSteps(flowSteps, flows) {
     //Handle new steps
+    //Javelin Rockets
+    flowSteps.set(moduleID + ".handleJavelinRocketsActivation",             handleJavelinRocketsActivation);
     //Pinaka Missiles
     flowSteps.set(moduleID + ".handlePinakaMissileActivation",              handlePinakaMissileActivation);
     flowSteps.set(moduleID + ".updatePinakaMissileItemAfterActivation",     updatePinakaMissileItemAfterActivation);
@@ -28,6 +31,8 @@ export function registerFlowSteps(flowSteps, flows) {
     
     //Insert steps
     //ActivationFlow
+    //Javelin Rockets
+    flows.get("ActivationFlow")?.insertStepAfter("checkItemCharged",        moduleID + ".handleJavelinRocketsActivation");
     //Pinaka Missiles
     flows.get("ActivationFlow")?.insertStepAfter("checkItemCharged",        moduleID + ".handlePinakaMissileActivation");
     flows.get("ActivationFlow")?.insertStepAfter("updateItemAfterAction",   moduleID + ".updatePinakaMissileItemAfterActivation");
