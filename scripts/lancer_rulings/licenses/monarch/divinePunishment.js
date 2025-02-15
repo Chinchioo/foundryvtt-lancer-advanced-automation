@@ -1,6 +1,6 @@
 import { LIDs, Settings } from "../../../global.js";
 import { addItemOnceToActorByLID, getItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
-import { beginAutoHitAllWeaponAttackFlow } from "../../../flowAdditions/attackFlowAdditions/attackFlowAdditionHelpers.js";
+import { beginAutoHitAllWeaponAttackFlow } from "../../../automationHelpers/autoHitAllWeaponAttackHelpers.js";
 import { isAutomationActive } from "../../../automationHelpers/automationHelpers.js";
 
 /**
