@@ -27,7 +27,9 @@ export async function beginRerollAttackFlow(actor, attack_results, hit_results, 
             attack_results: rerollAttackResults,
             hit_results: rerollHitResults,
             targets: rerollTargets,
-    } }
+            finished: false,
+        },
+    };
     console.log("Start reroll attack flow");
     await flow.begin();
     console.log("Finished reroll attack flow");
@@ -68,7 +70,9 @@ export async function beginRerollWeaponAttackFlow(item, attack_results, hit_resu
             attack_results: rerollAttackResults,
             hit_results: rerollHitResults,
             targets: rerollTargets,
-    } }
+            finished: false,
+        },
+    };
     console.log("Start reroll weapon attack flow");
     await flow.begin();
     console.log("Finished reroll weapon attack flow");

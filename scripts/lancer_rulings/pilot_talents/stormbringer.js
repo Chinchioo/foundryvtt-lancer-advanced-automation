@@ -1,7 +1,7 @@
 import { moduleID, weaponAttackFlowClass, WeaponSizes, WeaponTypes, LIDs, Flags, Settings } from "../../global.js";
 import { isActiveCombat, isAutomationActive } from "../../automationHelpers/automationHelpers.js";
 import { addItemOnceToActorByLID, getItemFromActorByLID } from "../../automationHelpers/tokenOrActorHelpers.js";
-import { beginAutoHitAllWeaponAttackFlow, addActionResolver, consumedLockOn, hasHit, isSpecialWeaponAttackFlow } from "../../flowAdditions/attackFlowAdditions/attackFlowAdditionHelpers.js";
+import { beginAutoHitAllWeaponAttackFlow, addActionResolver, consumedLockOn, hasHit, isSpecialWeaponAttackFlow, setIsSpecialWeaponAttackFlow } from "../../flowAdditions/attackFlowAdditions/attackFlowAdditionHelpers.js";
 
 const StormbringerRank = {
     torrent: 3,
@@ -65,7 +65,7 @@ export async function rollTorrentMissileAttackRolls(state, options) {
         for(const t of state.data.acc_diff.targets) {
             const target = t.target;
             const attack_roll = await new Roll(rollStr).evaluate({ async: true });
-            const hit = attack_roll.total >= (state.data.stormbringer_torrent_mk_ii.is_crit ? 4 : 5); //Hit on 4+ if crit on 5+ if no crit.
+            const hit = attack_roll.total >= (state.data.laa.stormbringer_torrent_mk_ii.is_crit ? 4 : 5); //Hit on 4+ if crit on 5+ if no crit.
 
             targetedAttackRolls.push({ roll: rollStr, target: target, usedLockOn: null });
             state.data.attack_results.push({ roll: attack_roll, tt: await attack_roll.getTooltip() });
@@ -516,8 +516,12 @@ export async function startTorrentMissile(actor, weaponSize, weaponRange, isCrit
         await item.update({ "system.active_profile": item.system.profiles[weaponSize], "system.selected_profile_index": weaponSize });
 
         const flow = new weaponAttackFlowClass(item);
-        flow.state.data.is_special_weapon_attack_flow = true;
-        flow.state.data.stormbringer_torrent_mk_ii = { is_crit: isCrit };
+        flow.state.data.laa = {
+            stormbringer_torrent_mk_ii: { 
+                is_crit: isCrit,
+            },
+        };
+        setIsSpecialWeaponAttackFlow(flow.state);
         console.log("Start torrent missile attack flow");
         await flow.begin();
         console.log("Finished torrent missile attack flow");

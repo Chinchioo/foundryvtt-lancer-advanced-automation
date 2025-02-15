@@ -166,9 +166,12 @@ async function startDelayedAttacksIntern(actor, delayedAttackIndizes, delayedAtt
                 const beginWeaponDelayedAttackFlow = async (item) => {
                     //Removing the delayed attack should happen within attack flow, after the delayed attack has been used!
                     const flow = new weaponAttackFlowClass(item);
-                    flow.state.data.delayed_attack = { arrayIndex: -1, templateIds: [] };
-                    flow.state.data.delayed_attack.array_index = delayedAttackIndizes[i];
-                    flow.state.data.delayed_attack.template_ids = delayedAttack.templateIds;
+                    flow.state.data.laa = {
+                        delayed_attack: {
+                            array_Index: delayedAttackIndizes[i],
+                            template_ids: delayedAttack.templateIds
+                        },
+                    };
                     console.log("Start delayed weapon attack flow");
                     await flow.begin();
                     console.log("Finished delayed weapon attack flow");
@@ -255,7 +258,7 @@ export async function handleDelayedAttacks(state, options) {
 
     //Check if we have delayed attacks which could already be triggered and ask user if they want to trigger them!
     //Only do this if this is not already an delayed attack!
-    if(!state.data.delayed_attack) {
+    if(!state.data.laa.delayed_attack) {
         let messageTriggerables = '';
         const delayedArray = state.actor.getFlag(moduleID, Flags.delayedAttacks) ?? [];
         for(let i = 0; i < delayedArray.length; i++) {
@@ -309,9 +312,9 @@ export async function initCustomDelayedAttackData(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
 
-    if(state.data.delayed_attack?.template_ids?.length > 0) {
-        for(const templateId of state.data.delayed_attack.template_ids) {
-            state.data.attack_templates.set(templateId, targetsFromTemplate(templateId, true));
+    if(state.data.laa.delayed_attack?.template_ids?.length > 0) {
+        for(const templateId of state.data.laa.delayed_attack.template_ids) {
+            state.data.laa.attack_templates.set(templateId, targetsFromTemplate(templateId, true));
         }
     }
     
@@ -334,9 +337,9 @@ export async function initCustomDelayedAttackData(state, options) {
 export async function cleanupDelayedAttackData(state, options, isContinue) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
 
-    if(isContinue && state.data.delayed_attack) {
+    if(isContinue && state.data.laa.delayed_attack) {
         let delayedArray = state.actor.getFlag(moduleID, Flags.delayedAttacks);
-        delayedArray.splice(state.data.delayed_attack.array_index, 1);
+        delayedArray.splice(state.data.laa.delayed_attack.array_index, 1);
         await state.actor.setFlag(moduleID, Flags.delayedAttacks, delayedArray);
     }
 }
