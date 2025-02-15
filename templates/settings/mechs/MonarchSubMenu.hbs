@@ -1,6 +1,26 @@
 <form autocomplete="off">
     <h2>{{monarchSettingsTitle}}</h2>
     <br/>
+    <h3>Javelin Rockets</h3>
+    <div class="form-group">
+        <label>{{monarchJavelinRocketsAutomationName}}</label>
+        <input type="checkbox" name="monarchJavelinRocketsAutomation" {{#if monarchJavelinRocketsAutomation}}checked{{/if}} />
+    </div>
+    <p class="notes">{{monarchJavelinRocketsAutomationHint}}</p>
+    <div class="form-group">
+        <label>{{monarchJavelinRocketsOnlyCombatName}}</label>
+        <input type="checkbox" name="monarchJavelinRocketsOnlyCombat" {{#if monarchJavelinRocketsOnlyCombat}}checked{{/if}} />
+    </div>
+    <p class="notes">{{monarchJavelinRocketsOnlyCombatHint}}</p>
+    <div class="form-group">
+        <label for="monarchJavelinRocketsTemplateImage">{{monarchJavelinRocketsTemplateImageName}}</label>
+        <button class="file-picker" type="button" name="monarchJavelinRocketsTemplateImageFilePicker" title="Browse Files" data-target="monarchJavelinRocketsTemplateImage" data-type="{{monarchJavelinRocketsTemplateImageFilePickerType}}">
+            <i class="fas fa-file-import"></i>
+        </button>
+        <input type="text" id="monarchJavelinRocketsTemplateImage" name="monarchJavelinRocketsTemplateImage" value="{{monarchJavelinRocketsTemplateImage}}" />
+    </div>
+    <p class="notes">{{monarchJavelinRocketsTemplateImageHint}}</p>
+    <br/>
     <h3>Avenger Silos</h3>
     <div class="form-group">
         <label>{{monarchAvengerSilosAutomationName}}</label>

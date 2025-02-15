@@ -15,6 +15,32 @@ export function registerSettings() {
         type: MonarchSubMenu,
     });
     
+    //Javelin rockets
+    game.settings.register(moduleID, Settings.monarchJavelinRocketsAutomation, {
+        name: "Automate Javelin Rockets",
+        hint: "Automatically places templates on system use (quick action). Allows attacking templates via macro or custom item action.",
+        scope: "client",
+        config: false,
+        type: Boolean,
+        default: false,
+    });
+    game.settings.register(moduleID, Settings.monarchJavelinRocketsOnlyCombat, {
+        name: "Automate Javelin Rockets only during combat",
+        hint: "If Javelin Rockets automation is active, it will only function during active combat.",
+        scope: "client",
+        config: false,
+        type: Boolean,
+        default: false,
+    });
+    game.settings.register(moduleID, Settings.monarchJavelinRocketsTemplateImage, {
+        name: "Javelin Rockets template image",
+        hint: "Select an image/gif/video to show on the Javelin Rockets attack templates.",
+        scope: "client",
+        config: false,
+        type: String,
+        filePicker: "imagevideo",
+        default: "",
+    });
     //Avenger silos
     game.settings.register(moduleID, Settings.monarchAvengerSilosAutomation, {
         name: "Automate Avenger Silos",
@@ -106,6 +132,20 @@ class MonarchSubMenu extends FormApplication {
         return {
             monarchSettingsTitle: game.settings.menus.get(moduleID + "." + Settings.monarchMenu).label,
 
+            //Javelin Rockets
+            monarchJavelinRocketsAutomationName: game.settings.settings.get(moduleID + "." + Settings.monarchJavelinRocketsAutomation).name,
+            monarchJavelinRocketsAutomationHint: game.settings.settings.get(moduleID + "." + Settings.monarchJavelinRocketsAutomation).hint,
+            monarchJavelinRocketsAutomation: game.settings.get(moduleID, Settings.monarchJavelinRocketsAutomation),
+
+            monarchJavelinRocketsOnlyCombatName: game.settings.settings.get(moduleID + "." + Settings.monarchJavelinRocketsOnlyCombat).name,
+            monarchJavelinRocketsOnlyCombatHint: game.settings.settings.get(moduleID + "." + Settings.monarchJavelinRocketsOnlyCombat).hint,
+            monarchJavelinRocketsOnlyCombat: game.settings.get(moduleID, Settings.monarchJavelinRocketsOnlyCombat),
+
+           monarchJavelinRocketsTemplateImageName: game.settings.settings.get(moduleID + "." + Settings.monarchJavelinRocketsTemplateImage).name,
+           monarchJavelinRocketsTemplateImageHint: game.settings.settings.get(moduleID + "." + Settings.monarchJavelinRocketsTemplateImage).hint,
+           monarchJavelinRocketsTemplateImageFilePickerType: game.settings.settings.get(moduleID + "." + Settings.monarchJavelinRocketsTemplateImage).filePicker,
+           monarchJavelinRocketsTemplateImage: game.settings.get(moduleID, Settings.monarchJavelinRocketsTemplateImage),
+
             //Avenger Silos
             monarchAvengerSilosAutomationName: game.settings.settings.get(moduleID + "." + Settings.monarchAvengerSilosAutomation).name,
             monarchAvengerSilosAutomationHint: game.settings.settings.get(moduleID + "." + Settings.monarchAvengerSilosAutomation).hint,
@@ -153,6 +193,11 @@ class MonarchSubMenu extends FormApplication {
     }
 
     async _updateObject(event, formData) {
+        //Javelin Rockets
+        game.settings.set(moduleID, Settings.monarchJavelinRocketsAutomation, formData.monarchJavelinRocketsAutomation);
+        game.settings.set(moduleID, Settings.monarchJavelinRocketsOnlyCombat, formData.monarchJavelinRocketsOnlyCombat);
+        game.settings.set(moduleID, Settings.monarchJavelinRocketsTemplateImage, formData.monarchJavelinRocketsTemplateImage);
+
         //Avenger Silos
         game.settings.set(moduleID, Settings.monarchAvengerSilosAutomation, formData.monarchAvengerSilosAutomation);
         game.settings.set(moduleID, Settings.monarchAvengerSilosOnlyCombat, formData.monarchAvengerSilosDuringCombat);

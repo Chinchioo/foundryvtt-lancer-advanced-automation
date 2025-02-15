@@ -18,10 +18,10 @@ export async function handleJavelinRocketsActivation(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
 
-    if(state.item.system.lid === LIDs.javelinRockets /*&& isAutomationActive(Settings.monarchJavelinRocketsAutomation, false, state.actor)*/) {
+    if(state.item.system.lid === LIDs.javelinRockets && isAutomationActive(Settings.monarchJavelinRocketsAutomation, Settings.monarchJavelinRocketsOnlyCombat, state.actor)) {
         placeJavelinRocketsTemplatesIntern(state.item, state.actor);
     }
-
+    
     return true;
 }
 
@@ -39,7 +39,7 @@ export async function handleJavelinRocketsActivation(state, options) {
  */
 export async function placeJavelinRocketsTemplatesIntern(item, actor) {
     let templateIds = [];
-    const newTemplateIds = await createTargetAreas(0.5, WeaponRanges.blast, 3, ""/*game.settings.get(moduleID, Settings.monarchJavelinRocketsTemplateImage)*/);
+    const newTemplateIds = await createTargetAreas(0.5, WeaponRanges.blast, 3, game.settings.get(moduleID, Settings.monarchJavelinRocketsTemplateImage));
     if(!newTemplateIds) {
         ui.notifications.warn(item.name + " activation got canceled!");
         return false;

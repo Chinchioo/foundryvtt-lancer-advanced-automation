@@ -165,6 +165,7 @@ export const Settings = {
     monarchMenu: "monarchMenu",
     //Javelin Rockets
     monarchJavelinRocketsAutomation:    "monarchJavelinRocketsAutomation",
+    monarchJavelinRocketsOnlyCombat:    "monarchJavelinRocketsOnlyCombat",
     monarchJavelinRocketsTemplateImage: "monarchJavelinRocketsTemplateImage",
     //Avenger Silos
     monarchAvengerSilosAutomation: "monarchAvengerSilosAutomation",
