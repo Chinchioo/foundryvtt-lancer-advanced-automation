@@ -1,6 +1,7 @@
 import { moduleID, LIDs, Settings, WeaponRanges, Flags } from "../../../global.js";
 import { isAutomationActive } from "../../../automationHelpers/automationHelpers.js";
 import { createTargetAreas } from "../../../automationHelpers/templateAndTargetingHelpers.js";
+import { getItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
 
 /**
  * ====================================
@@ -19,9 +20,9 @@ export async function handleJavelinRocketsActivation(state, options) {
     if (!state.item) return true;
 
     if(state.item.system.lid === LIDs.javelinRockets && isAutomationActive(Settings.monarchJavelinRocketsAutomation, Settings.monarchJavelinRocketsOnlyCombat, state.actor)) {
-        placeJavelinRocketsTemplatesIntern(state.item, state.actor);
+        placeJavelinRocketsTemplatesIntern(state.actor, state.item);
     }
-    
+
     return true;
 }
 
@@ -34,10 +35,10 @@ export async function handleJavelinRocketsActivation(state, options) {
 /**
  * Starts placement of the templates for javelin rockets system.
  * For internal use only.
- * @param item The item for which the templates shall be placed!
  * @param actor The actor for which the templates shall be placed!
+ * @param item The item for which the templates shall be placed!
  */
-export async function placeJavelinRocketsTemplatesIntern(item, actor) {
+export async function placeJavelinRocketsTemplatesIntern(actor, item) {
     let templateIds = [];
     const newTemplateIds = await createTargetAreas(0.5, WeaponRanges.blast, 3, game.settings.get(moduleID, Settings.monarchJavelinRocketsTemplateImage));
     if(!newTemplateIds) {
@@ -66,5 +67,14 @@ export async function placeJavelinRocketsTemplates(actor) {
         ui.notifications.warn("Cannot use javelin rockets, system not installed on mech!");
         return;
     }
-    await placeJavelinRocketsTemplatesIntern(actor);
+    await placeJavelinRocketsTemplatesIntern(actor, javelinRocketsItem);
+}
+
+/**
+ * Cleans up the javelin rockets flags.
+ * Use in case of issues!
+ * @param actor: The actor to clean the flags for.
+ */
+export async function cleanupJavelinRocketsFlags(actor) {
+    await actor.unsetFlag(moduleID, Flags.javelinRocketsTemplates);
 }
