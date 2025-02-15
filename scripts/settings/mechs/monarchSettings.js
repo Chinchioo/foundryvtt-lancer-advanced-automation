@@ -187,9 +187,6 @@ class MonarchSubMenu extends FormApplication {
 
     activateListeners(html) {
         super.activateListeners(html);
-
-        const buttonElement = html.find('[name="monarchPinakaMissileDelayedTemplateImageFilePicker"]')[0];
-        FilePicker.fromButton(buttonElement);
     }
 
     async _updateObject(event, formData) {
@@ -200,7 +197,7 @@ class MonarchSubMenu extends FormApplication {
 
         //Avenger Silos
         game.settings.set(moduleID, Settings.monarchAvengerSilosAutomation, formData.monarchAvengerSilosAutomation);
-        game.settings.set(moduleID, Settings.monarchAvengerSilosOnlyCombat, formData.monarchAvengerSilosDuringCombat);
+        game.settings.set(moduleID, Settings.monarchAvengerSilosOnlyCombat, formData.monarchAvengerSilosOnlyCombat);
 
         //Divine Punishment
         game.settings.set(moduleID, Settings.monarchDivinePunishmentAutomation, formData.monarchDivinePunishmentAutomation);
