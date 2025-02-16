@@ -23,7 +23,7 @@ import { init as initDamageFlowAdditions, registerFlowSteps as registerDamageFlo
 import { init as initStructureFlowAdditions, registerFlowSteps as registerStructureFlowSteps } from "./flowAdditions/structureFlowAdditions/structureFlowAdditions.js";
 //Import Licenses
 //Monrach
-import { cleanupJavelinRocketsFlags, placeJavelinRocketsTemplates, } from "./lancer_rulings/licenses/monarch/javelinRockets.js";
+import { attackJavelinRocketsTargets, placeJavelinRocketsTemplates, } from "./lancer_rulings/licenses/monarch/javelinRockets.js";
 import { cleanupAvengerSiloFlags, startAvengerSilos } from "./lancer_rulings/licenses/monarch/avengerSilos.js";
 import { stopTlalocProtocol } from "./lancer_rulings/licenses/monarch/tlaloc.js";
 import { startDivinePunishmentAttack } from "./lancer_rulings/licenses/monarch/divinePunishment.js";
@@ -69,7 +69,6 @@ Hooks.once("init", async function () {
             cleanupHookEventData,
             clearDelayedAttacks,
             cleanupOverpowerCaliberFlags,
-            cleanupJavelinRocketsFlags,
             cleanupAvengerSiloFlags,
             cleanupStormbringerFlags,
         },
@@ -85,6 +84,7 @@ Hooks.once("init", async function () {
         monarch: {
             stopTlalocProtocol,
             placeJavelinRocketsTemplates,
+            attackJavelinRocketsTargets,
             startAvengerSilos,
             startDivinePunishmentAttack,
         },

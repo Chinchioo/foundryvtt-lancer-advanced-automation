@@ -1,7 +1,8 @@
 import { moduleID, LIDs, Settings, WeaponRanges, Flags } from "../../../global.js";
 import { isAutomationActive } from "../../../automationHelpers/automationHelpers.js";
 import { createTargetAreas } from "../../../automationHelpers/templateAndTargetingHelpers.js";
-import { getItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
+import { addItemOnceToActorByLID, getItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
+import { beginAutoHitAllWeaponAttackFlow } from "../../../flowAdditions/attackFlowAdditions/attackFlowAdditionHelpers.js";
 
 /**
  * ====================================
@@ -19,8 +20,14 @@ export async function handleJavelinRocketsActivation(state, options) {
     if (!state.data) throw new TypeError("Activation flow state missing!");
     if (!state.item) return true;
 
-    if(state.item.system.lid === LIDs.javelinRockets && isAutomationActive(Settings.monarchJavelinRocketsAutomation, Settings.monarchJavelinRocketsOnlyCombat, state.actor)) {
-        placeJavelinRocketsTemplatesIntern(state.actor, state.item);
+    if((state.item.system.lid === LIDs.javelinRockets || state.item.system.lid === LIDs.javelinRocketsCustom) && isAutomationActive(Settings.monarchJavelinRocketsAutomation, Settings.monarchJavelinRocketsOnlyCombat, state.actor)) {        
+        if(state.data.action?.lid == LIDs.javelinRocketsCustomAttack) {
+            //Custom weapon attack
+            return await attackJavelinRocketsTargetsIntern(state.actor);
+        } else {
+            //Place templates
+            return await placeJavelinRocketsTemplatesIntern(state.actor, state.item);
+        }
     }
 
     return true;
@@ -37,22 +44,15 @@ export async function handleJavelinRocketsActivation(state, options) {
  * For internal use only.
  * @param actor The actor for which the templates shall be placed!
  * @param item The item for which the templates shall be placed!
+ * @returns Boolean if the placement has worked without interruption.
  */
 export async function placeJavelinRocketsTemplatesIntern(actor, item) {
-    let templateIds = [];
-    const newTemplateIds = await createTargetAreas(0.5, WeaponRanges.blast, 3, game.settings.get(moduleID, Settings.monarchJavelinRocketsTemplateImage));
-    if(!newTemplateIds) {
+    const templateIds = await createTargetAreas(0.5, WeaponRanges.blast, 3, game.settings.get(moduleID, Settings.monarchJavelinRocketsTemplateImage));
+    if(!templateIds) {
         ui.notifications.warn(item.name + " activation got canceled!");
         return false;
     }
-    const oldTemplateIds = actor.getFlag(moduleID, Flags.javelinRocketsTemplates);
-    if(oldTemplateIds) {
-        templateIds = oldTemplateIds.concat(newTemplateIds);
-    } else {
-        templateIds = newTemplateIds;
-    }
-    
-    await actor.setFlag(moduleID, Flags.javelinRocketsTemplates, templateIds);
+    return true;
 }
 
 /**
@@ -71,10 +71,36 @@ export async function placeJavelinRocketsTemplates(actor) {
 }
 
 /**
- * Cleans up the javelin rockets flags.
- * Use in case of issues!
- * @param actor: The actor to clean the flags for.
+ * Starts attack for javelin rockets system targeting all javelin rocket templates which have a token inside.
+ * For internal use only.
+ * @param actor The actor for which the attack shall be done!
+ * @returns Boolean if the attack has worked without interruption.
  */
-export async function cleanupJavelinRocketsFlags(actor) {
-    await actor.unsetFlag(moduleID, Flags.javelinRocketsTemplates);
+export async function attackJavelinRocketsTargetsIntern(actor) {
+    //Check if actor already has item, otherwise add it quickly for this usage and remove later again!
+    const item = await addItemOnceToActorByLID(actor, LIDs.javelinRocketsWeapon);
+    if(item) {
+        await beginAutoHitAllWeaponAttackFlow(item, true);
+    } else {
+        ui.notifications.error("Internal issue, couldn't add item '" + LIDs.javelinRocketsWeapon + "' from compendium to actor '" + actor.name + "'");
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Starts placement of the templates for javelin rockets system.
+ * For macro usage!
+ * @param actor The actor for which the templates shall be placed!
+ */
+export async function attackJavelinRocketsTargets(actor) {
+    //Check if javelin rockets can be used!
+    let javelinRocketsItem = getItemFromActorByLID(actor, LIDs.javelinRockets);
+    if(!javelinRocketsItem)
+        javelinRocketsItem = getItemFromActorByLID(actor, LIDs.javelinRocketsCustom);
+    if(!javelinRocketsItem) {
+        ui.notifications.warn("Cannot use javelin rockets, system not installed on mech!");
+        return;
+    }
+    await attackJavelinRocketsTargetsIntern(actor, javelinRocketsItem);
 }

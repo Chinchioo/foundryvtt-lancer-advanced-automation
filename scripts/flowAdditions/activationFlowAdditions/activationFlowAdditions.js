@@ -78,5 +78,5 @@ export async function onCombatUpdateGM(actor, currentCombatant, currentRound) {
  * @param actor: The actor for the combat deletion handling.
  */
 export async function onCombatDeleteGM(actor) {
-    await onTlalocCombatDeleteGM(actor);
+    await onCombatDeleteGM(actor);
 }

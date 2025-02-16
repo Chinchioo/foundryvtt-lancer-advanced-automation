@@ -69,6 +69,8 @@ export const LIDs = {
     //JavelinRocket
     javelinRockets: "ms_javelin_rockets",
     javelinRocketsCustom: "laa_monarch_javelin_rockets_custom",
+    javelinRocketsCustomPlaceTemplates: "laa_monarch_javelin_rockets_custom_place_templates",
+    javelinRocketsCustomAttack: "laa_monarch_javelin_rockets_custom_attack",
     javelinRocketsWeapon: "laa_monarch_javelin_rockets_weapon",
     //Tlaloc
     tlalocClassNhp: "l_tlaloc_class_nhp",
