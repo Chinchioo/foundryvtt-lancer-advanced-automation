@@ -27,8 +27,8 @@ export async function addItemOnceToActorByLID(actor, itemLID) {
     //Check if actor already has item, otherwise add it quickly!
     let item = getItemFromActorByLID(actor, itemLID);
     if(!item) {
-        const divinePunishmentWeapon = await game.lancer.fromLid(itemLID);
-        const result = await actor.quickOwn(divinePunishmentWeapon);
+        const itemFromCompendium = await game.lancer.fromLid(itemLID);
+        const result = await actor.quickOwn(itemFromCompendium);
         if(result[1])
             item = result[0];
     }

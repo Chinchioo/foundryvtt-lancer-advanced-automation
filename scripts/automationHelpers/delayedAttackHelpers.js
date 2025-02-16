@@ -25,17 +25,12 @@ export const ActivationTiming = {
  */
 function createAttackName(actor, isAutomated, itemName) {
     let attackName = isAutomated ? "automated delayed " + itemName + " attack" : "delayed " + itemName + " attack";
-    console.log("HELLOOO!!!!");
-    console.log(attackName);
-
     const delayedArray = actor.getFlag(moduleID, Flags.delayedAttacks);
     let highestNumber = 0;
     if(delayedArray) {
         for(const delayedAttack of delayedArray) {
-            console.log(delayedAttack.attackName);
             if(delayedAttack.attackName.startsWith(attackName)) {
                 const foundNumber = delayedAttack.attackName.substr(attackName.length + 1);
-                console.log(foundNumber);
                 if(highestNumber < foundNumber) {
                     highestNumber = foundNumber;
                 }
