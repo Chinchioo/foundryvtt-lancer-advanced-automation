@@ -95,7 +95,7 @@ export async function handlePinakaMissileActivation(state, options) {
                 }
             });
 
-            state.data.pinaka_head_swap = { selectedDamageTypeIndex: damageTypeSelect };
+            state.data.laa.pinaka_head_swap = { selectedDamageTypeIndex: damageTypeSelect };
 
             //Remove heat!
             state.data.self_heat = 0;
@@ -123,7 +123,7 @@ export async function updatePinakaMissileItemAfterActivation(state, options) {
     //Pinaka missiles mkii 
     //Swap modular head protocol
     if(state.data.action?.lid === LIDs.pinakaMissileMkiiLaaSwapHead && checkPinakaUseable(state.item) && state.data.pinaka_head_swap?.selectedDamageTypeIndex) {
-        const damageTypeIndex = state.data.pinaka_head_swap.selectedDamageTypeIndex; 
+        const damageTypeIndex = state.data.laa.pinaka_head_swap.selectedDamageTypeIndex; 
 
         //Switch to selected damage type
         await state.item.update({"system.active_profile": state.item.system.profiles[damageTypeIndex], "system.selected_profile_index": damageTypeIndex });
@@ -141,12 +141,12 @@ export async function updatePinakaMissileItemAfterActivation(state, options) {
 export async function printPinakaMissileActivationChatMessage(state, options) {
     //Pinaka missiles mkii 
     //Swap modular head protocol
-    if(state.data.action?.lid === LIDs.pinakaMissileMkiiLaaSwapHead && checkPinakaUseable(state.item) && state.data.pinaka_head_swap?.selectedDamageTypeIndex) {
+    if(state.data.action?.lid === LIDs.pinakaMissileMkiiLaaSwapHead && checkPinakaUseable(state.item) && state.data.laa.pinaka_head_swap?.selectedDamageTypeIndex) {
         //Chat Data        
         const chatData = {
             type: CONST.CHAT_MESSAGE_TYPES.EMOTE,
             speaker: ChatMessage.getSpeaker({token: state.actor, alias: state.actor?.token?.name}),
-            content: 'Switched Pinaka heads to:<br>' + damageTypeHTML[state.data.pinaka_head_swap.selectedDamageTypeIndex],
+            content: 'Switched Pinaka heads to:<br>' + damageTypeHTML[state.data.laa.pinaka_head_swap.selectedDamageTypeIndex],
             emote: true,
         }
         ChatMessage.create(chatData);
@@ -185,10 +185,10 @@ export async function cleanupPinakaMissileActivation(state, options, isContinue)
     }
     //Pinaka missiles mkii 
     //Swap modular head protocol
-    else if(state.data.action?.lid === LIDs.pinakaMissileMkiiLaaSwapHead && checkPinakaUseable(state.item) && state.data.pinaka_head_swap?.current_profile_index) {
+    else if(state.data.action?.lid === LIDs.pinakaMissileMkiiLaaSwapHead && checkPinakaUseable(state.item) && state.data.laa.pinaka_head_swap?.current_profile_index) {
         //Switch to old profile as fallback
         if(!isContinue) {
-            const profileIndex = state.data.pinaka_head_swap?.current_profile_index ?? 0;
+            const profileIndex = state.data.laa.pinaka_head_swap?.current_profile_index ?? 0;
             await state.item.update({"system.active_profile": state.item.system.profiles[profileIndex], "system.selected_profile_index": profileIndex });
         }
     }
@@ -238,14 +238,14 @@ export async function initPinakaMissileAttackData(state, options) {
         ui.notifications.warn("Currently cannot automate pinaka missile functionality with default pinaka missile item! Please use the one from the advanced automation compendium!");
     }
     if(state.item.system.lid === LIDs.pinakaMissileLaa) {
-        if(state.data.delayed_attack) {
-            state.data.pinaka_missile = { old_damage: state.item.system.active_profile.damage[0].val };
+        if(state.data.laa.delayed_attack) {
+            state.data.laa.pinaka_missile = { old_damage: state.item.system.active_profile.damage[0].val };
             state.item.system.active_profile.damage[0].val = "3D6";
         }
     }
     if(state.item.system.lid === LIDs.pinakaMissileMkiiLaa) {
-        if(state.data.delayed_attack) {
-            state.data.pinaka_missile_mkii = { old_tags: state.item.system.active_profile.all_tags };
+        if(state.data.laa.delayed_attack) {
+            state.data.laa.pinaka_missile_mkii = { old_tags: state.item.system.active_profile.all_tags };
             state.item.system.active_profile.all_tags.push(await getTagData(LIDs.tags.seeking));
         }
     }
@@ -265,7 +265,7 @@ export async function recalculatePinakaMissileSelfHeat(state, options) {
     
     if(state.item.system.lid === LIDs.pinakaMissileLaa || state.item.system.lid === LIDs.pinakaMissileMkiiLaa) {
         //Remove self heat if delayed attack, as heat is already applied during delayed preparation!
-        if(state.data.delayed_attack)
+        if(state.data.laa.delayed_attack)
             state.data.self_heat = 0;
     }
     
@@ -282,11 +282,11 @@ export async function cleanupPinakaMissileData(state, options, isContinue) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
 
     if(state.item.system.lid === LIDs.pinakaMissileLaa) {
-        if(state.data.pinaka_missile)
-            state.item.system.active_profile.damage[0].val = state.data.pinaka_missile.old_damage;
+        if(state.data.laa.pinaka_missile)
+            state.item.system.active_profile.damage[0].val = state.data.laa.pinaka_missile.old_damage;
     }
     if(state.item.system.lid === LIDs.pinakaMissileMkiiLaa) {
-        if(state.data.pinaka_missile_mkii)
-            state.item.system.active_profile.all_tags = state.data.pinaka_missile_mkii.old_tags;
+        if(state.data.laa.pinaka_missile_mkii)
+            state.item.system.active_profile.all_tags = state.data.laa.pinaka_missile_mkii.old_tags;
     }
 }

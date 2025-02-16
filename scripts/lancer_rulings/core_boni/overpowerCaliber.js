@@ -34,7 +34,7 @@ export async function handleOverpowerCaliber(state, options) {
                     
                     await simpleChatMessage(state.actor, "Uses overpower caliber on " + state.item.name);
                     addBonusDamageToDamageRoll(state, damageType, "1d6");
-                    state.data.is_overpower_caliber_active = true;
+                    state.data.laa.is_overpower_caliber_active = true;
                 }
             }
         }
@@ -52,7 +52,7 @@ export async function handleOverpowerCaliber(state, options) {
 export async function setOverpowerCaliberUsedFlags(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
 
-    if(state.data.is_overpower_caliber_active && isActiveCombat(state.actor)) {
+    if(state.data.laa.is_overpower_caliber_active && isActiveCombat(state.actor)) {
         await state.actor.setFlag(moduleID, Flags.coreBonusOverpowerCaliberUsed, true);
         await state.actor.setFlag(moduleID, Flags.coreBonusOverpowerCaliberRound, game.combat.current.round);
     }

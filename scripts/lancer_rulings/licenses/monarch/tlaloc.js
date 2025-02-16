@@ -24,7 +24,7 @@ export async function handleTlalocActivation(state, options) {
         if(state.actor.getFlag(moduleID, Flags.tlalocClassNhpActive)) {
             ui.notifications.warn("Tlaloc already active on this actor! Multiple activations aren't possible!");
             //Set flag to skip reseting tlaloc flags!!
-            state.data.tlalocAlreadyActive = true;
+            state.data.laa.tlalocAlreadyActive = true;
             return false;
         }
         if(!isActiveCombat(state.actor)) {
@@ -59,7 +59,7 @@ export async function cleanupTlalocActivation(state, options, isContinue) {
     if (!state.item) return true;
 
     if(state.item.system.lid === LIDs.tlalocClassNhp || state.item.system.lid === LIDs.tlalocClassNhpMkii) {
-        if(!isContinue && !state.data.tlalocAlreadyActive) {
+        if(!isContinue && !state.data.laa.tlalocAlreadyActive) {
             await resetTlalocFlags(state.actor);
         }
     }
@@ -110,9 +110,6 @@ export async function handlePostFlowTlaloc(state, options, isContinue) {
                         //Seems to be annoying to post the card!!
                         //game.lancer.beginItemChatFlow(tlalocItem, {"itemId": tlalocItem.id,"uuid": tlalocItem.uuid});
                         await simpleChatMessage(state.actor, "Rerolls last attack with " + tlalocItem.name);
-
-                        //Set flag to keep templates, for easier retargeting...
-                        state.data.keepTemplates = true;
 
                         //Check if basic or weapon attack flow
                         if(state.data.type === "attack")

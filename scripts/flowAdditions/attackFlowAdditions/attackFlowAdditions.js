@@ -4,7 +4,7 @@ import { simpleYesNoQuestion } from "../../automationHelpers/automationHelpers.j
 import { removeTemplatesFromScene, targetsFromTemplate } from "../../automationHelpers/templateAndTargetingHelpers.js";
 import { isRerollAttack } from "../../automationHelpers/rerollAttackHelpers.js";
 //Attack flow helpers
-import { isSpecialWeaponAttackFlow } from "./attackFlowAdditionHelpers.js";
+import { autoHitAllRollAttack, isAutoHitAllWeaponAttackFlow, isSpecialWeaponAttackFlow } from "./attackFlowAdditionHelpers.js";
 import { cleanupDelayedAttackData, handleDelayedAttacks, initCustomDelayedAttackData } from "../../automationHelpers/delayedAttackHelpers.js";
 //Monarch
 import { handlePostFlowTlaloc } from "../../lancer_rulings/licenses/monarch/tlaloc.js";
@@ -74,7 +74,7 @@ export function registerFlowSteps(flowSteps, flows) {
 
     //Stormbringer
     flowSteps.set(moduleID + ".rollTorrentMissileAttackRolls",      rollTorrentMissileAttackRolls);
-
+    
     //Insert steps
     //BasicAttackFlow
     flows.get("BasicAttackFlow")?.insertStepAfter ("initAttackData",                    moduleID + ".initCustomAttackData");
@@ -193,35 +193,35 @@ export async function init() {
  * @param state: The current flow state.
  */
 async function actionResolver(state) {
-    if(state.data.action_resolver) {
+    if(state.data.laa?.action_resolver) {
         const resolveActionFunc = async (state, selectedAction) => { 
-            await state.data.action_resolver[selectedAction].resolver_function(state);
-            state.data.action_resolver.splice(selectedAction, 1);
+            await state.data.laa.action_resolver[selectedAction].resolver_function(state);
+            state.data.laa.action_resolver.splice(selectedAction, 1);
 
             let invalidActionIndizies = [];
-            for(let i = 0; i < state.data.action_resolver.length; i++) {
-                if(!await state.data.action_resolver[i].reevaluate_function(state)) {
+            for(let i = 0; i < state.data.laa.action_resolver.length; i++) {
+                if(!await state.data.laa.action_resolver[i].reevaluate_function(state)) {
                     invalidActionIndizies.push(i);
                 }
             }
             for(const invalidActionIndex of invalidActionIndizies) {
-                state.data.action_resolver.splice(invalidActionIndex, 1);
+                state.data.laa.action_resolver.splice(invalidActionIndex, 1);
             }
         }
 
         //If we only have one action, do not show the message!
-        if(state.data.action_resolver.length === 1) {
+        if(state.data.laa.action_resolver.length === 1) {
             await resolveActionFunc(state, 0);
         } else {
-            while(state.data.action_resolver.length > 0) {
+            while(state.data.laa.action_resolver.length > 0) {
                 let messageActions = '';
-                for(let i = 0; i < state.data.action_resolver.length; i++) {
-                    messageActions = messageActions + '<option value="' + i + '">' + state.data.action_resolver[i].name + '</option>';
+                for(let i = 0; i < state.data.laa.action_resolver.length; i++) {
+                    messageActions = messageActions + '<option value="' + i + '">' + state.data.laa.action_resolver[i].name + '</option>';
                 }
                 let selectedAction = -1;
                 try {
                     selectedAction = await Dialog.prompt({
-                        title: "Action resolver " + state.item?.name ?? "" + state.data.laa?.reroll_data ? " Reroll Attack" : "",
+                        title: "Action resolver " + state.item?.name ?? "" + isRerollAttack(state) ? " Reroll Attack" : "",
                         content: `
                             <div>
                                 <h2>Found multiple actions to trigger!</h2>
@@ -272,20 +272,24 @@ async function untargetTokens() {
  * @returns True if the flow shall go on, false if the flow has been canceled. 
  */
 async function initCustomAttackData(state, options) {
-    if (!state.data) throw new TypeError("Activation flow state missing!");
+    if (!state.data) throw new TypeError("Attack flow state missing!");
 
     //Untarget (Is annoying as fuck!!!)
     if(game.settings.get(moduleID, Settings.untargetBeforeAttack))
-        await untargetTokens(state, options);
-
-    //Store templates!
-    state.data.attack_templates = new Map();
+        await untargetTokens(state, options);  
 
     //Init laa data!
     if(!state.data.laa)
         state.data.laa = {};
+    //Store temporary attack data!
     if(!state.data.laa.temp)
-        state.data.laa.temp = { attack_results: [], hit_results: [], targets: [] }
+        state.data.laa.temp = { attack_results: [], hit_results: [], targets: [] }    
+    //Store templates!
+    if(!state.data.laa.attack_templates)
+        state.data.laa.attack_templates = new Map();
+    //Hooks for template creation!
+    if(!state.data.laa.hooks)
+        state.data.laa.hooks = { createTemplate: "", deleteTemplate: "" };
 
     return true;
 }
@@ -354,20 +358,19 @@ async function targetingHelper(state, options) {
     //Set flag for usage in other functions (e.g. LibWrapper for updateTokenTargets)
     await game.user.setFlag(moduleID, Flags.attackFlowRunning, true);
     //Set flag for usage in other functions (e.g. animation on attack templates)
-    await game.user.setFlag(moduleID, Flags.attackFlowTemplates, state.data.attack_templates);
+    await game.user.setFlag(moduleID, Flags.attackFlowTemplates, state.data.laa.attack_templates);
     
     //Hooks for template creation!
-    state.data.hooks = { createTemplate: "", deleteTemplate: "" };
-    state.data.hooks.createTemplate = await Hooks.on("createMeasuredTemplate", 
+    state.data.laa.hooks.createTemplate = await Hooks.on("createMeasuredTemplate", 
     (document, opitons, user) => {
         if(game.user.id === user) {
-            state.data.attack_templates.set(document.id, []);
+            state.data.laa.attack_templates.set(document.id, []);
         }
     });
-    state.data.hooks.deleteTemplate = await Hooks.on("deleteMeasuredTemplate", 
+    state.data.laa.hooks.deleteTemplate = await Hooks.on("deleteMeasuredTemplate", 
     (document, opitons, user) => {
         if(game.user.id === user) {
-            state.data.attack_templates.delete(document.id);
+            state.data.laa.attack_templates.delete(document.id);
         }
     });
     
@@ -384,9 +387,9 @@ async function targetingHelper2(state, options) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
     
     //Must be done after concluding the attack hud, as we cannot find the targets during template creation....
-    if(state.data.attack_templates) {
-        for(let key of state.data.attack_templates.keys()) {
-            state.data.attack_templates.set(key, targetsFromTemplate(key, false));
+    if(state.data.laa.attack_templates) {
+        for(let key of state.data.laa.attack_templates.keys()) {
+            state.data.laa.attack_templates.set(key, targetsFromTemplate(key, false));
         }
     }
     
@@ -400,28 +403,8 @@ async function targetingHelper2(state, options) {
  * @returns True if the flow shall go on, false if the flow has been canceled. 
  */
 async function customRollAttacks(state, options) {
-    if(state.data.auto_hit_all) {
-        const rollStr = "9000";
-        const attack_roll = await new Roll(rollStr).evaluate({ async: true });
-        const attack_roll_tt = await attack_roll.getTooltip();
-        let targetedAttackRolls = [];
-
-        state.data.hit_results = [];
-        state.data.attack_results = [];
-        for(const t of state.data.acc_diff.targets) {
-            const target = t.target;
-
-            targetedAttackRolls.push({ roll: rollStr, target: target, usedLockOn: null });            
-            state.data.attack_results.push({ roll: attack_roll, tt: attack_roll_tt, });
-            state.data.hit_results.push({
-                target: target,
-                total: "--",
-                usedLockOn: null,
-                hit: true,
-                crit: false,
-           });
-        }
-        state.data.attack_rolls = { roll: rollStr, targeted: targetedAttackRolls };
+    if(isAutoHitAllWeaponAttackFlow(state)) {
+        autoHitAllRollAttack(state);
         return true;
     } else if(isSpecialWeaponAttackFlow(state)) {
         //Special weapons shall handle their hit rolling and detection either through auto_hit_all or through their own functionality!
@@ -470,8 +453,8 @@ async function prepareAnimationMacroData(state, options) {
 
     //Set target templates flag for usage in other functions (e.g. animation on attack templates)
     let attackTemplates = [];
-    if(state.data.attack_templates)
-        attackTemplates = Array.from(state.data.attack_templates, ([id, targetIDs]) => ({ id, targetIDs }));
+    if(state.data.laa.attack_templates)
+        attackTemplates = Array.from(state.data.laa.attack_templates, ([id, targetIDs]) => ({ id, targetIDs }));
     await game.user.setFlag(moduleID, Flags.attackFlowTemplates, attackTemplates);
 
     //Set damage types and damage flags for usage in other functions (e.g. animation per damage types)
@@ -527,10 +510,10 @@ async function manipulateRerollTargeting(state, options) {
 async function cleanupAdvancedAutomationData(state, options, isContinue) {
     if (!state.data) throw new TypeError("Attack flow state missing!");
     
-    if(state.data.hooks?.createTemplate)
-        Hooks.off("createMeasuredTemplate", state.data.hooks.createTemplate);
-    if(state.data.hooks?.deleteTemplate)
-        Hooks.off("deleteMeasuredTemplate", state.data.hooks.deleteTemplate);
+    if(state.data.laa.hooks?.createTemplate)
+        Hooks.off("createMeasuredTemplate", state.data.laa.hooks.createTemplate);
+    if(state.data.laa.hooks?.deleteTemplate)
+        Hooks.off("deleteMeasuredTemplate", state.data.laa.hooks.deleteTemplate);
     
     //Set flag for usage in other functions (e.g. LibWrapper for updateTokenTargets)
     await game.user.setFlag(moduleID, Flags.attackFlowRunning, false);
@@ -550,8 +533,8 @@ async function cleanupAdvancedAutomationData(state, options, isContinue) {
  */
 async function removeAttackTemplates(state, options, isContinue) {
     //Remove targeting helper templates from view
-    if(!state.data.delayed_attack || isContinue) //Do not remove if delayed attack got canceled!
-        removeTemplatesFromScene(state.data.attack_templates?.keys());
+    if(!state.data.laa.delayed_attack || isContinue) //Do not remove if delayed attack got canceled!
+        removeTemplatesFromScene(state.data.laa.attack_templates?.keys());
 }
 
 

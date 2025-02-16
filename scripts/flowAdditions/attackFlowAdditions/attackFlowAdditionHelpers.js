@@ -54,17 +54,14 @@ export function hasHit(state) {
 }
 
 /**
- * Begins an auto hit all weapon attack flow. (Automatically hits all targets without roll!)
- * @param item: Item to start attack flow for.
- * @param isSpecialWeapon: If the given weapon is a fake weapon e.g. avenger silos.
+ * Sets the is special weapon attack flow parameter on the given state data.
+ * This is needed to don't activate some systems based on these attacks.
+ * @param state: The current flow state.
  */
-export async function beginAutoHitAllWeaponAttackFlow(item, isSpecialWeapon) {
-    const flow = new weaponAttackFlowClass(item);
-    flow.state.data.auto_hit_all = true;
-    flow.state.data.is_special_weapon_attack_flow = isSpecialWeapon;
-    console.log("Start auto hit all weapon attack flow");
-    await flow.begin();
-    console.log("Finished auto hit all weapon attack flow");
+export function setIsSpecialWeaponAttackFlow(state) {
+    if(!state.data.laa)
+        state.data.laa = {};
+    state.data.laa.is_special_weapon_attack_flow = true;
 }
 
 /**
@@ -74,7 +71,7 @@ export async function beginAutoHitAllWeaponAttackFlow(item, isSpecialWeapon) {
  * @returns True if this is a special weapon attack flow, false if not.
  */
 export function isSpecialWeaponAttackFlow(state) {
-    return state.data.is_special_weapon_attack_flow;
+    return state.data.laa?.is_special_weapon_attack_flow;
 }
 
 /**
@@ -100,9 +97,11 @@ export function consumedLockOn(state) {
  * @param reevaluateFunction: An asynchronous function which reevaluates if the current action can be used. (Is called after every action again to check!)
  */
 export function addActionResolver(state, resolverName, resolverFunction, reevaluateFunction) {
-    if(!state.data.action_resolver)
-        state.data.action_resolver = [];
-    state.data.action_resolver.push({
+    if(!state.data.laa)
+        state.data.laa = {};
+    if(!state.data.laa.action_resolver)
+        state.data.laa.action_resolver = [];
+    state.data.laa.action_resolver.push({
         name: resolverName,
         resolver_function: resolverFunction,
         reevaluate_function: reevaluateFunction,
