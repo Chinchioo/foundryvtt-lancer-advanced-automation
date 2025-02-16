@@ -3,8 +3,9 @@ import { moduleID, Flags, Settings } from "../../global.js";
 import { simpleYesNoQuestion } from "../../automationHelpers/automationHelpers.js";
 import { removeTemplatesFromScene, targetsFromTemplate } from "../../automationHelpers/templateAndTargetingHelpers.js";
 import { isRerollAttack } from "../../automationHelpers/rerollAttackHelpers.js";
+import { autoHitAllRollAttack, isAutoHitAllWeaponAttackFlow } from "../../automationHelpers/autoHitAllWeaponAttackHelpers.js";
 //Attack flow helpers
-import { autoHitAllRollAttack, isAutoHitAllWeaponAttackFlow, isSpecialWeaponAttackFlow } from "./attackFlowAdditionHelpers.js";
+import { isSpecialWeaponAttackFlow } from "./attackFlowAdditionHelpers.js";
 import { cleanupDelayedAttackData, handleDelayedAttacks, initCustomDelayedAttackData } from "../../automationHelpers/delayedAttackHelpers.js";
 //Monarch
 import { handlePostFlowTlaloc } from "../../lancer_rulings/licenses/monarch/tlaloc.js";

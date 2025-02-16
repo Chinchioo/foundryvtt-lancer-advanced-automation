@@ -1,7 +1,8 @@
 import { moduleID, weaponAttackFlowClass, WeaponSizes, WeaponTypes, LIDs, Flags, Settings } from "../../global.js";
 import { isActiveCombat, isAutomationActive } from "../../automationHelpers/automationHelpers.js";
 import { addItemOnceToActorByLID, getItemFromActorByLID } from "../../automationHelpers/tokenOrActorHelpers.js";
-import { beginAutoHitAllWeaponAttackFlow, addActionResolver, consumedLockOn, hasHit, isSpecialWeaponAttackFlow, setIsSpecialWeaponAttackFlow } from "../../automationHelpers/autoHitAllWeaponAttackHelpers.js";
+import { beginAutoHitAllWeaponAttackFlow } from "../../automationHelpers/autoHitAllWeaponAttackHelpers.js";
+import { addActionResolver, consumedLockOn, hasHit, isSpecialWeaponAttackFlow, setIsSpecialWeaponAttackFlow } from "../../flowAdditions/attackFlowAdditions/attackFlowAdditionHelpers.js";
 
 const StormbringerRank = {
     torrent: 3,
