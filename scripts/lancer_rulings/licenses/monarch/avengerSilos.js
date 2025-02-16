@@ -1,7 +1,8 @@
 import { moduleID, LIDs, Flags, Settings } from "../../../global.js";
 import { addItemOnceToActorByLID, getItemFromActorByLID } from "../../../automationHelpers/tokenOrActorHelpers.js";
-import { addActionResolver, beginAutoHitAllWeaponAttackFlow, hasCritHit, isSpecialWeaponAttackFlow } from "../../../automationHelpers/autoHitAllWeaponAttackHelpers.js";
+import { beginAutoHitAllWeaponAttackFlow } from "../../../automationHelpers/autoHitAllWeaponAttackHelpers.js";
 import { isActiveCombat, isAutomationActive, isRangedAttack, simpleYesNoQuestion } from "../../../automationHelpers/automationHelpers.js";
+import { addActionResolver, hasCritHit, isSpecialWeaponAttackFlow } from "../../../flowAdditions/attackFlowAdditions/attackFlowAdditionHelpers.js";
 
 /**
  * ====================================
